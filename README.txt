@@ -1,4 +1,4 @@
-krpano iOS 4.2.1 gyroscope script
+krpano iOS 4.2 gyroscope script
 by Aldo Hoeben / fieldofview.com
 ---------------------------------
 

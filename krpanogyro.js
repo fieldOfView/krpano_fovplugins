@@ -1,5 +1,5 @@
 /*
-	krpano iOS 4.2.1 gyroscope script
+	krpano iOS 4.2 gyroscope script
 	by Aldo Hoeben / fieldofview.com
 	
 	tested for krpano 1.0.8.12 (build 2010-11-24) and iPhone4
