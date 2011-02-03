@@ -36,11 +36,8 @@ var gyro_voffset_start = 0;
 var gyro_offset_interval;
 
 var degRad = Math.PI/180;
-var gyro_transform = eulerMatrix( new Object( { yaw:0, pitch:90*degRad, roll:0 } ) );
-
 
 if( window["DeviceOrientationEvent"] ) {
-
 	var gyro_init_interval = setInterval( function() {
 		gyro_krpano = document.getElementById( gyro_objectname );	
 
@@ -81,7 +78,7 @@ function gyro_init() {
 				pitch: event["beta"] * degRad, 
 				roll: event["gamma"] * degRad 
 			} ) );
-			var gyro_vector = matrixEuler( multiply3x3( gyro_transform, gyro_matrix ) );
+			var gyro_vector = matrixEuler( rotateMatrix( gyro_matrix ) );
 			
 			gyro_krpano.call( "lookat(" + 
 				(-gyro_vector.yaw / degRad + gyro_hoffset )%360 + "," + 
@@ -159,26 +156,16 @@ function matrixEuler( matrix ) {
 	return new Object( { yaw:heading, pitch:attitude, roll:bank } ) 
 }
 
-function  multiply3x3(a, b) {
-	// based on http://fhtr.blogspot.com/2009/03/4x4-matrix-multiplication-in-javascript.html
+function  rotateMatrix( matrix ) {
+	// rotate matrix by 90 degrees around the pitch axis
 	
-	// allocating the array values should be faster than doing the same dynamically
-	var result = new Array(
-		0.0, 0.0, 0.0, 
-		0.0, 0.0, 0.0, 
-		0.0, 0.0, 0.0
-	);
-		
+	// clone the input matrix
+	var result = matrix.slice(0);
+	
+	// specific manipulation for 90 degree rotation around pitch axis
 	for (var i=0; i<9; i+=3) {
-		result[i] =   b[i] * a[0] +
-					  b[i+1] * a[3] +
-					  b[i+2] * a[6];
-		result[i+1] = b[i] * a[1] +
-					  b[i+1] * a[4] +
-					  b[i+2] * a[7];
-		result[i+2] = b[i] * a[2] +
-					  b[i+1] * a[5] +
-					  b[i+2] * a[8];
+		result[i] =   matrix[i+1];
+		result[i+1] = -matrix[i];
 	}
 	return result;
 }
