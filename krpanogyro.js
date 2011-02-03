@@ -73,12 +73,11 @@ function gyro_init() {
 	window.addEventListener("deviceorientation", function(event) {
 		if ( !gyro_touching ) {
 			// process event.alpha, event.beta and event.gamma
-			var gyro_matrix = eulerMatrix( new Object( { 
+			var gyro_vector = rotateEuler( new Object( { 
 				yaw: event["alpha"] * degRad, 
 				pitch: event["beta"] * degRad, 
 				roll: event["gamma"] * degRad 
 			} ) );
-			var gyro_vector = matrixEuler( rotateMatrix( gyro_matrix ) );
 			
 			gyro_krpano.call( "lookat(" + 
 				(-gyro_vector.yaw / degRad + gyro_hoffset )%360 + "," + 
@@ -108,12 +107,10 @@ function gyro_smooth_voffset() {
 	}
 }
 
-/*
- * Matrix math utility functions
- */
-
-function eulerMatrix( euler ) {
+function rotateEuler( euler ) {
 	// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
+	// and http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
+
 	
 	var ch = Math.cos(euler.yaw);
 	var sh = Math.sin(euler.yaw);
@@ -122,22 +119,21 @@ function eulerMatrix( euler ) {
 	var cb = Math.cos(euler.roll);
 	var sb = Math.sin(euler.roll);
 
-	return new Array( 
-		ch * ca,	sh*sb - ch*sa*cb,	ch*sa*sb + sh*cb,
-		sa,			ca*cb,				-ca*sb,			
-		-sh*ca,		sh*sa*cb + ch*sb,	-sh*sa*sb + ch*cb
-	);				
-}
+	// note: includes 90 degree rotation around z axis
+	matrix = new Array( 
+		sh*sb - ch*sa*cb,	-ch*ca,		 ch*sa*sb + sh*cb,
+		ca*cb,				-sa,		-ca*sb,
+		sh*sa*cb + ch*sb,	 sh*ca,		-sh*sa*sb + ch*cb
+	);
 
-function matrixEuler( matrix ) {
-	// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
+	
 	var heading;
 	var bank;
 	var attitude;
 	
-	/* [m00 m01 m02] 0 1 2
-	 * [m10 m11 m12] 3 4 5 
-	 * [m20 m21 m22] 6 7 8 */
+	/* [0:m00 1:m01 2:m02]
+	 * [3:m10 4:m11 5:m12]
+	 * [6:m20 7:m21 8:m22] */
 	 
 	if (matrix[3] > 0.9999) { // singularity at north pole
 		heading = Math.atan2(matrix[2],matrix[8]);
@@ -154,18 +150,4 @@ function matrixEuler( matrix ) {
 	}
 	
 	return new Object( { yaw:heading, pitch:attitude, roll:bank } ) 
-}
-
-function  rotateMatrix( matrix ) {
-	// rotate matrix by 90 degrees around the pitch axis
-	
-	// clone the input matrix
-	var result = matrix.slice(0);
-	
-	// specific manipulation for 90 degree rotation around pitch axis
-	for (var i=0; i<9; i+=3) {
-		result[i] =   matrix[i+1];
-		result[i+1] = -matrix[i];
-	}
-	return result;
 }
