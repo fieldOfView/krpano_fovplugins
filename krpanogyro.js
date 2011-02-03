@@ -4,10 +4,9 @@
 	
 	tested for krpano 1.0.8.12 (build 2010-11-24) and iPhone4
 
-	Include krpanogyro.js in your html document:
+	Include krpanogyro.js in your html document, eg:
 
 <div id="krpanoDIV">
-	<noscript><table width="100%" height="100%"><tr valign="middle"><td><center>ERROR:<br><br>Javascript not activated<br><br></center></td></tr></table></noscript>
 </div>
 	
 <script type="text/javascript" src="swfkrpano.js"></script>
@@ -18,7 +17,8 @@
 	swf.embed("krpanoDIV");
 </script>
 
-	If you use a different div id, you will have to edit the gyro_objectname variable
+	In most cases just adding the krpanogyro.js script line should do the trick.
+	If you use a different div id, you will have to edit the gyro_objectname variable.
 
 This software is licensed under the CC-GNU GPL version 2.0 or later
 http://creativecommons.org/licenses/GPL/2.0/
@@ -81,7 +81,7 @@ function gyro_init() {
 				pitch: event["beta"] * degRad, 
 				roll: event["gamma"] * degRad 
 			} ) );
-			var gyro_vector = matrixEuler( multiply4x4( gyro_transform, gyro_matrix ) );
+			var gyro_vector = matrixEuler( multiply3x3( gyro_transform, gyro_matrix ) );
 			
 			gyro_krpano.call( "lookat(" + 
 				(-gyro_vector.yaw / degRad + gyro_hoffset )%360 + "," + 
@@ -116,7 +116,7 @@ function gyro_smooth_voffset() {
  */
 
 function eulerMatrix( euler ) {
-	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
+	// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
 	
 	var ch = Math.cos(euler.yaw);
 	var sh = Math.sin(euler.yaw);
@@ -126,69 +126,59 @@ function eulerMatrix( euler ) {
 	var sb = Math.sin(euler.roll);
 
 	return new Array( 
-		ch * ca,	sh*sb - ch*sa*cb,	ch*sa*sb + sh*cb,	0,
-		sa,			ca*cb,				-ca*sb,				0,
-		-sh*ca,		sh*sa*cb + ch*sb,	-sh*sa*sb + ch*cb,	0,
-		0,			0,					0,					0
+		ch * ca,	sh*sb - ch*sa*cb,	ch*sa*sb + sh*cb,
+		sa,			ca*cb,				-ca*sb,			
+		-sh*ca,		sh*sa*cb + ch*sb,	-sh*sa*sb + ch*cb
 	);				
 }
 
 function matrixEuler( matrix ) {
-	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
+	// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
 	var heading;
 	var bank;
 	var attitude;
 	
-	/* [m00 m01 m02 m03]
-	 * [m10 m11 m12 m13]
-	 * [m20 m21 m22 m23] 
-	 * [m30 m31 m32 m33] 
-	 */
-		if (matrix[4] > 0.9999) { // singularity at north pole
-			heading = Math.atan2(matrix[2],matrix[10]);
-			attitude = Math.PI/2;
-			bank = 0;
-		} else if (matrix[4] < -0.9999) { // singularity at south pole
-			heading = Math.atan2(matrix[2],matrix[10]);
-			attitude = -Math.PI/2;
-			bank = 0;
-		} else {
-			heading = Math.atan2(-matrix[8],matrix[0]);
-			bank = Math.atan2(-matrix[6],matrix[5]);
-			attitude = Math.asin(matrix[4]);
-		}
+	/* [m00 m01 m02] 0 1 2
+	 * [m10 m11 m12] 3 4 5 
+	 * [m20 m21 m22] 6 7 8 */
+	 
+	if (matrix[3] > 0.9999) { // singularity at north pole
+		heading = Math.atan2(matrix[2],matrix[8]);
+		attitude = Math.PI/2;
+		bank = 0;
+	} else if (matrix[3] < -0.9999) { // singularity at south pole
+		heading = Math.atan2(matrix[2],matrix[8]);
+		attitude = -Math.PI/2;
+		bank = 0;
+	} else {
+		heading = Math.atan2(-matrix[6],matrix[0]);
+		bank = Math.atan2(-matrix[5],matrix[4]);
+		attitude = Math.asin(matrix[3]);
+	}
 	
 	return new Object( { yaw:heading, pitch:attitude, roll:bank } ) 
 }
 
-function  multiply4x4(a, b) {
-	// http://fhtr.blogspot.com/2009/03/4x4-matrix-multiplication-in-javascript.html
+function  multiply3x3(a, b) {
+	// based on http://fhtr.blogspot.com/2009/03/4x4-matrix-multiplication-in-javascript.html
 	
 	// allocating the array values should be faster than doing the same dynamically
 	var result = new Array(
-		0.0, 0.0, 0.0, 0.0,
-		0.0, 0.0, 0.0, 0.0,
-		0.0, 0.0, 0.0, 0.0,
-		0.0, 0.0, 0.0, 0.0
+		0.0, 0.0, 0.0, 
+		0.0, 0.0, 0.0, 
+		0.0, 0.0, 0.0
 	);
 		
-	for (var i=0; i<16; i+=4) {
+	for (var i=0; i<9; i+=3) {
 		result[i] =   b[i] * a[0] +
-					  b[i+1] * a[4] +
-					  b[i+2] * a[8] +
-					  b[i+3] * a[12];
+					  b[i+1] * a[3] +
+					  b[i+2] * a[6];
 		result[i+1] = b[i] * a[1] +
-					  b[i+1] * a[5] +
-					  b[i+2] * a[9] +
-					  b[i+3] * a[13];
+					  b[i+1] * a[4] +
+					  b[i+2] * a[7];
 		result[i+2] = b[i] * a[2] +
-					  b[i+1] * a[6] +
-					  b[i+2] * a[10] +
-					  b[i+3] * a[14];
-		result[i+3] = b[i] * a[3] +
-					  b[i+1] * a[7] +
-					  b[i+2] * a[11] +
-					  b[i+3] * a[15];
+					  b[i+1] * a[5] +
+					  b[i+2] * a[8];
 	}
 	return result;
 }
