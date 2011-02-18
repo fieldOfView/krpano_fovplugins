@@ -190,13 +190,18 @@ if (!this.krpanoGyro) {
 				if( Math.abs(pitch) > 70 ) {
 					altyaw = event.alpha; 
 					
-					if(window.orientation == 90) 
-						altyaw += 90;
-					else if(window.orientation == -90) 
-						altyaw += -90;
-					
-					if ( pitch>0 ) 
-						altyaw += 180;
+					switch(window.orientation) {
+						case 0:
+							if ( pitch>0 ) 
+								altyaw += 180;
+							break;
+						case 90: 
+							altyaw += 90;
+							break;
+						case -90: 
+							altyaw += -90;
+							break;
+					}
 					
 					altyaw = altyaw % 360;
 					if( Math.abs( altyaw - yaw ) > 180 ) 
