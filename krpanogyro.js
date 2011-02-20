@@ -106,6 +106,8 @@ if (!this.krpanoGyro) {
 			voffset = krpano.get("view.vlookat");
 			krpano.set("gyro", o);
 			krpano.set("gyro.deviceAvailable", true);
+			krpano.set("gyro.adaptiveV", isAdaptiveVOffset);
+			krpano.set("gyro.enabled", isEnabled);
 
 			enable();			
 		}
@@ -113,25 +115,27 @@ if (!this.krpanoGyro) {
 		////////////////////////////////////////////////////////////
 		
 		function enable() {
-			if (krpano && isDeviceEnabled && !isEnabled) {
+			if (isDeviceEnabled && !isEnabled) {
 				window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-				krpano.addEventListener("touchstart", handleTouchStart, true );
-				krpano.addEventListener("touchend", touchend, true );		
-				krpano.addEventListener("touchcancel", touchend, true );	
+				krpano.addEventListener("touchstart", handleTouchStart, true);
+				krpano.addEventListener("touchend", handleTouchEnd, true);		
+				krpano.addEventListener("touchcancel", handleTouchEnd, true);	
 				isEnabled = true;
-				krpano.set("gyro.enabled", true);
+				if(krpano)
+					krpano.set("gyro.enabled", true);
 			}
 			return isEnabled;
 		}
 
 		function disable() {
-			if (krpano && isDeviceEnabled && isEnabled) {
+			if (isDeviceEnabled && isEnabled) {
 				window.removeEventListener("deviceorientation", handleDeviceOrientation);
 				krpano.removeEventListener("touchstart", handleTouchStart);
-				krpano.removeEventListener("touchend", touchend);		
-				krpano.removeEventListener("touchcancel", touchend);	
+				krpano.removeEventListener("touchend", handleTouchEnd);		
+				krpano.removeEventListener("touchcancel", handleTouchEnd);	
 				isEnabled = false;
-				krpano.set("gyro.enabled", false);
+				if(krpano)
+					krpano.set("gyro.enabled", false);
 			}
 			return isEnabled;
 		}
@@ -144,21 +148,19 @@ if (!this.krpanoGyro) {
 		}
 		
 		function setAdaptiveVOffset(arg) {
-			if (krpano && isDeviceEnabled) {
-				switch(arg) {
-					case 0, "0", false, "false":
-						isAdaptiveVOffset = false;
-						break;
-					case 1, "1", true, "true":
-						isAdaptiveVOffset = true;
-						break;
-					default:
-						isAdaptiveVOffset = !isAdaptiveVOffset;
-						break;
-				}
-				krpano.set("gyro.adaptiveV", isAdaptiveVOffset);
-				adaptVOffset();
+			switch(arg) {
+				case 0, "0", false, "false":
+					isAdaptiveVOffset = false;
+					break;
+				case 1, "1", true, "true":
+					isAdaptiveVOffset = true;
+					break;
+				default:
+					isAdaptiveVOffset = !isAdaptiveVOffset;
+					break;
 			}
+			if (krpano)
+				krpano.set("gyro.adaptiveV", isAdaptiveVOffset);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -167,6 +169,10 @@ if (!this.krpanoGyro) {
 			isTouching = true;
 		}
 
+		function handleTouchEnd(event) {
+			isTouching = false;	
+		}
+		
 		function handleDeviceOrientation(event) {
 			if ( !isTouching && isEnabled ) {
 
@@ -223,11 +229,6 @@ if (!this.krpanoGyro) {
 				
 				adaptVOffset();
 			}
-		}
-
-		function touchend(event) {
-			adaptVOffset();
-			isTouching = false;	
 		}
 
 		function adaptVOffset() {
