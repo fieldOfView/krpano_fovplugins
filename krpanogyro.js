@@ -58,38 +58,35 @@
 
 if (!this.krpanoGyro) {
 	var krpanoGyro = function(krpanoObjectOrName) {
-		var isDeviceEnabled = !!window.DeviceOrientationEvent;
-		var objectname;
+		var isDeviceEnabled = !!window.DeviceOrientationEvent,
+			krpano,
+			objectname,
+			
+			o = {
+				 enable:						enable
+				,disable:						disable
+				,toggle:						toggle
+				,deviceAvailable: function() {	return isDeviceEnabled; }
+				,enabled: function() {			return isEnabled; }
+				,setadaptivev: 					setAdaptiveVOffset
+				,setAdaptiveV: 					setAdaptiveVOffset
+				,adaptiveV: function() {		return isAdaptiveVOffset; }
+				,toString: function() {			return "[object krpanoGyro]"; }
+			}, // note: krpano converts calls/methodnames to lowercase
+			
+			isEnabled = false,
+			isAdaptiveVOffset = false,
+			isTouching = false,
+			
+			hoffset = 0, voffset = 0,
+			hlookat = 0, vlookat = 0,
+			
+			degRad = Math.PI/180;
+			
 		if( krpanoObjectOrName )
 			objectname = ( typeof( krpanoObjectOrName )=='object' ) ? krpanoObjectOrName.pid : krpanoObjectOrName;
 		else
 			objectname = 'krpanoSWFObject';
-		var krpano;
-
-		var o = {
-			 enable:						enable
-			,disable:						disable
-			,toggle:						toggle
-			,deviceAvailable: function() {	return isDeviceEnabled; }
-			,enabled: function() {			return isEnabled; }
-			,setadaptivev: 					setAdaptiveVOffset
-			,setAdaptiveV: 					setAdaptiveVOffset
-			,adaptiveV: function() {		return isAdaptiveVOffset; }
-			,toString: function() {			return "[object krpanoGyro]"; }
-		};
-		// note: krpano converts calls/methodnames to lowercase
-
-		var isEnabled = false;
-		var isAdaptiveVOffset = false;
-		
-		var isTouching = false;
-
-		var hoffset = 0;
-		var voffset = 0;
-		var hlookat = 0;
-		var vlookat = 0;
-
-		var degRad = Math.PI/180;
 		
 		////////////////////////////////////////////////////////////
 
@@ -172,21 +169,18 @@ if (!this.krpanoGyro) {
 
 		function handleDeviceOrientation(event) {
 			if ( !isTouching && isEnabled ) {
-				// keep view change since last orientation event
-				// -> user has manually panned, or krpano has altered lookat
-				hoffset += krpano.get("view.hlookat") - hlookat;
-				voffset += krpano.get("view.vlookat") - vlookat;
-				
+
 				// process event.alpha, event.beta and event.gamma
 				var orientation = rotateEuler( new Object( { 
-					yaw: event["alpha"] * degRad, 
-					pitch: event["beta"] * degRad, 
-					roll: event["gamma"] * degRad 
-				} ) );
-				
-				var yaw = orientation.yaw / degRad;
-				var pitch = orientation.pitch / degRad;
-				
+						yaw: event["alpha"] * degRad, 
+						pitch: event["beta"] * degRad, 
+						roll: event["gamma"] * degRad 
+					} ) ),
+					yaw = orientation.yaw / degRad,
+					pitch = orientation.pitch / degRad,
+					altyaw = yaw,
+					factor;
+
 				// fix gimbal lock
 				if( Math.abs(pitch) > 70 ) {
 					altyaw = event.alpha; 
@@ -212,6 +206,11 @@ if (!this.krpanoGyro) {
 					yaw = yaw * ( 1-factor ) + altyaw * factor;
 				}
 
+				// track view change since last orientation event
+				// -> user has manually panned, or krpano has altered lookat
+				hoffset += krpano.get("view.hlookat") - hlookat;
+				voffset += krpano.get("view.vlookat") - vlookat;
+				
 				// clamp voffset
 				if(Math.abs( pitch + voffset ) > 90) {
 					voffset = ( pitch+voffset > 0 ) ? (90 - pitch) : (-90 - pitch)
@@ -244,12 +243,13 @@ if (!this.krpanoGyro) {
 			// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
 			// and http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
 
-			var ch = Math.cos(euler.yaw);
-			var sh = Math.sin(euler.yaw);
-			var ca = Math.cos(euler.pitch);
-			var sa = Math.sin(euler.pitch);
-			var cb = Math.cos(euler.roll);
-			var sb = Math.sin(euler.roll);
+			var heading, bank, attitude,
+				ch = Math.cos(euler.yaw),
+				sh = Math.sin(euler.yaw),
+				ca = Math.cos(euler.pitch),
+				sa = Math.sin(euler.pitch),
+				cb = Math.cos(euler.roll),
+				sb = Math.sin(euler.roll);
 
 			// note: includes 90 degree rotation around z axis
 			matrix = new Array( 
@@ -257,11 +257,7 @@ if (!this.krpanoGyro) {
 				ca*cb,              -sa,      -ca*sb,			
 				sh*sa*cb + ch*sb,    sh*ca,   -sh*sa*sb + ch*cb
 			);
-			
-			var heading;
-			var bank;
-			var attitude;
-			
+						
 			/* [m00 m01 m02] 0 1 2
 			 * [m10 m11 m12] 3 4 5 
 			 * [m20 m21 m22] 6 7 8 */
