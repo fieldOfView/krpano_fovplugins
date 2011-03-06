@@ -1,1 +1,0 @@
-mxmlc -target-player=10.0.0 -use-network=false autolevels.as
