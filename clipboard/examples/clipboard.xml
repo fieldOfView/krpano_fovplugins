@@ -1,0 +1,18 @@
+<krpano version="1.0.8">
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+	
+	<plugin name="clipboard" url="../../clipboard.swf" />	
+	
+	<plugin name="testbox"	url="%SWFPATH%/plugins/textfield.swf"
+			backgroundcolor="0x000000" border="false" 
+			height="30" width="300"	y="-11%" align="center"	
+			css="p{color: #FFFFFF; font-family: Arial; font-size: 20; leading:-7; text-align: center;}"
+			html="[p]Click here to set the clipboard.[/p]"
+			onclick="testClipboard()"
+			/>
+	
+	<action name="testClipboard">
+		set(plugin[clipboard].text,"Hello World");
+		set(plugin[testbox].html,"[p]Check your clipboard![/p]");
+	</action>
+</krpano>
