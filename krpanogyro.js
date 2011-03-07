@@ -67,10 +67,12 @@ if (!this.krpanoGyro) {
 				,disable:						disable
 				,toggle:						toggle
 				,deviceAvailable: function() {	return isDeviceEnabled; }
+				,deviceavailable:				false
 				,enabled: function() {			return isEnabled; }
-				,setadaptivev: 					setAdaptiveVOffset
 				,setAdaptiveV: 					setAdaptiveVOffset
+				,setadaptivev: 					setAdaptiveVOffset
 				,adaptiveV: function() {		return isAdaptiveVOffset; }
+				,adaptivev:						false
 				,toString: function() {			return "[object krpanoGyro]"; }
 			}, // note: krpano converts calls/methodnames to lowercase
 			
@@ -96,7 +98,7 @@ if (!this.krpanoGyro) {
 
 		function waitForElement() {
 			krpano = document.getElementById(objectname);
-			if (krpano)	startGyro();
+			if (krpano && krpano.get != undefined)	startGyro();
 			else		setTimeout(waitForElement,100);
 		}
 
@@ -105,8 +107,8 @@ if (!this.krpanoGyro) {
 			hoffset = krpano.get("view.hlookat");
 			voffset = krpano.get("view.vlookat");
 			krpano.set("gyro", o);
-			krpano.set("gyro.deviceAvailable", true);
-			krpano.set("gyro.adaptiveV", isAdaptiveVOffset);
+			krpano.set("gyro.deviceavailable", true);
+			krpano.set("gyro.adaptivev", isAdaptiveVOffset);
 			krpano.set("gyro.enabled", isEnabled);
 
 			enable();			
@@ -159,8 +161,8 @@ if (!this.krpanoGyro) {
 					isAdaptiveVOffset = !isAdaptiveVOffset;
 					break;
 			}
-			if (krpano)
-				krpano.set("gyro.adaptiveV", isAdaptiveVOffset);
+			if (krpano && krpano.set != undefined)
+				krpano.set("gyro.adaptivev", isAdaptiveVOffset);
 		}
 
 		////////////////////////////////////////////////////////////
