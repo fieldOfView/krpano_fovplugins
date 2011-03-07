@@ -6,7 +6,7 @@ clipboard. Access to the clipboard is write-only, so you can not
 paste into the krpano viewer. The clipboard plugin has one 
 attribute which can be set through krpano actions.
   
-* text  
+* `text`  
 	Text to copy to the system clipboard.  
 	
 
@@ -14,8 +14,7 @@ How to build
 ------------
 
 To build the plugins from the supplied source files, you need the 
-open source Flex SDK, version 3.2 or newer, from Adobe:
-http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK
+[open source Flex SDK](http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK), version 3.2 or newer.
 
 To compile clipboard.swf, use the following commandline options
 (in a single line):
@@ -26,5 +25,4 @@ License
 -------
 
 The plugins can be used free of charge and the source code is 
-available under a CC-GNU GPL license.
-http://creativecommons.org/licenses/GPL/2.0/ 
+available under a [CC-GNU GPL](http://creativecommons.org/licenses/GPL/2.0/) license.

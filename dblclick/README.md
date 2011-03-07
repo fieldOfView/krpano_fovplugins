@@ -4,7 +4,7 @@ krpano dblclick plugin
 A krpano plugin that provides a way to respond to doubleclick events.
 The plugin has a single attribute: 
   
-* ondblclick  
+* `ondblclick`  
 	Actions / functions that will be called when there is a doubleclick on the krpano viewer.  
 	
 
@@ -12,8 +12,7 @@ How to build
 ------------
 
 To build the plugins from the supplied source files, you need the 
-open source Flex SDK, version 3.2 or newer, from Adobe:
-http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK
+[open source Flex SDK](http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK), version 3.2 or newer.
 
 To compile dblclick.swf, use the following commandline options
 (in a single line):
@@ -24,5 +23,4 @@ License
 -------
 
 The plugins can be used free of charge and the source code is 
-available under a CC-GNU GPL license.
-http://creativecommons.org/licenses/GPL/2.0/ 
+available under a [CC-GNU GPL](http://creativecommons.org/licenses/GPL/2.0/) license.
