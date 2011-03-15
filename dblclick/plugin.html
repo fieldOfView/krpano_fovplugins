@@ -30,59 +30,38 @@
       <div id="krpano_contenttext"> 
         <!-- USER CONTENT STARTS HERE -->
         
-        <h1>Autolevels Plugin <span class="pluginfilename">autolevels.swf</span> 
+        <h1>Doubleclick Plugin <span class="pluginfilename">dblclick.swf</span> 
           <!-- <span class="flashhtml5">for Flash</span> -->
           <div class="pluginautor">by Aldo Hoeben - <a href="http://fieldofview.com">fieldofview.com</a></div>
         </h1>
         <div class="paragraph">
           <h2><a name="description" href="#description" class="selflink">Description</a></h2>
-          <p>This plugin dynamically applies an autolevels effect to the krpano view. When properly used, this can mimic autoexposure of a (video-)camera, or the adaptation of the human perceptive system. The effect can be tuned to affect just the luminosity of the view, or   the luminosity as well as the color of the view. </p>
-          <p>Please note that the   effect is applied to the (jpeg compressed) 8 bit panorama, so if the   effect is too pronounced you will start to see artifacts such as banding   and color mismatches. </p>
+          <p>This plugin provides a way to respond to doubleclick events.</p>
         </div>
         <div class="paragraph">
           <h2><a name="download" href="#download" class="selflink">Download</a></h2>
-          <div class="dlitem"> <a href="https://github.com/fieldOfView/krpano_fovplugins/raw/master/autolevels.swf">autolevels.swf</a>&nbsp; <small>(plugin only)</small></div>
-          <p>The autolevels sources and examples are available as part of the fovplugins package</p>
+          <div class="dlitem"> <a href="https://github.com/fieldOfView/krpano_fovplugins/raw/master/dblclick.swf">dblclick.swf</a>&nbsp; <small>(plugin only)</small></div>
+          <p>The dblclick sources and examples are available as part of the fovplugins package</p>
           <div class="dlitem"> <a href="https://github.com/fieldOfView/krpano_fovplugins/zipball/master">fovplugins.zip</a>&nbsp; <small>(plugin, source code &amp; examples)</small><br/>
           </div>
         </div>
         <div class="paragraph">
           <h2><a name="forum" href="#forum" class="selflink">krpano Forum Discussion Thread</a></h2>
-          <a href="http://krpano.com/forum/wbb/index.php?page=Thread&threadID=3242">Autolevels Plugin Thread</a> </div>
+          <a href="http://krpano.com/forum/wbb/index.php?page=Thread&postID=19266">Doubleclick Plugin Thread</a> </div>
         <div class="paragraph">
           <h2><a name="syntax" href="#syntax" class="selflink">Syntax / XML Usage Example</a></h2>
-          <pre class="xmlpre">&lt;<a href="http://krpano.com/docu/xml/#plugin">plugin</a> <a href="http://krpano.com/docu/xml/#plugin.name">name</a>="autolevels" 
-        <a href="http://krpano.com/docu/xml/#plugin.url">url</a>="autolevels.swf" 
-        <a href="#enabled" class="pluginattrib">enabled</a>="true" 
-        <a href="#effect" class="pluginattrib">effect</a>="1" 
-        <a href="#adaptation" class="pluginattrib">adaptation</a>="0.1" 
-        <a href="#coloradjust" class="pluginattrib">coloradjust</a>="1" 
-        <a href="#threshold" class="pluginattrib">threshold</a>="0" 
-        <a href="#attenuation" class="pluginattrib">attenuation</a>="0" 
+          <pre class="xmlpre">&lt;<a href="http://krpano.com/docu/xml/#plugin">plugin</a> <a href="http://krpano.com/docu/xml/#plugin.name">name</a>="dblclick" 
+        <a href="http://krpano.com/docu/xml/#plugin.url">url</a>="dblclick.swf" 
         <a href="http://krpano.com/docu/xml/#plugin.keep">keep</a>="true"
+        <a href="#ondblclick" class="pluginattrib">ondblclick</a>="switch(fullscreen)"
         /&gt;</pre>
         </div>
         <div class="paragraph">
           <h2><a name="attributes" href="#attributes" class="selflink">Plugin Attributes</a></h2>
           <dl>
-            <dt><a name="enabled" href="#enabled" class="selflink">enabled</a></dt>
-            <dd>enable/disable the "metering"<br>
-              values: true/false, default: true </dd>
-            <dt><a name="effect" href="#effect" class="selflink">effect</a></dt>
-            <dd>limit the effect of the plugin (0: no effect, 1: full effect)<br>
-              values: 0-1, default: 1</dd>
-            <dt><a name="adaptation" href="#adaptation" class="selflink">adaptation</a></dt>
-            <dd>speed at which the camera iris "adapts" (1: full speed, less means there is a transition)<br>
-              values: 0-1, default: 0.1</dd>
-            <dt><a name="coloradjust" href="#coloradjust" class="selflink">coloradjust</a></dt>
-            <dd>amount of color adjusting to do (0: only lightness, 1: lightness and color)<br>
-              values: 0-1, default: 1 </dd>
-            <dt><a name="threshold" href="#threshold" class="selflink">threshold</a></dt>
-            <dd>clip small highlight and/or shadow areas. <br>
-              values: 0-255, default: 0 </dd>
-            <dt><a name="attenuation" href="#attenuation" class="selflink">attenuation</a></dt>
-            <dd>"centerweight": 0: meter full view/window, 1: only use center pixel of the window for metering. <br>
-              values: 0-1, default: 0 </dd>
+            <dt><a name="ondblclick" href="#ondblclick" class="selflink">ondblclick</a></dt>
+            <dd> Actions / functions that will be called when there is a doubleclick on the krpano viewer.<br>
+              values: function or action-name </dd>
           </dl>
         </div>
         <div class="paragraph">
@@ -90,7 +69,7 @@
           <script>
 			function showexample() 
 			{
-				var iframe = '<iframe id="ccexample" name="ccframe" src="examples/autolevels.html" width="100%"  height="300" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+				var iframe = '<iframe id="ccexample" name="ccframe" src="examples/dblclick.html" width="100%"  height="300" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
 				document.getElementById("example").innerHTML = iframe;
 			}
 		</script>
@@ -103,7 +82,6 @@
               </tr>
             </table>
           </div>
-          <p>The slider ui in the example above was contributed by <a href="http://krpano.com/forum/wbb/index.php?page=User&userID=43">michel</a></p>
         </div>
         <div class="paragraph">
           <h2><a name="license" href="#license" class="selflink">License</a></h2>
