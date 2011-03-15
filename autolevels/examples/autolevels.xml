@@ -1,0 +1,11 @@
+<krpano version="1.0.8">
+	<view hlookat="90" vlookat="0" fov="65" maxpixelzoom="1.0" fovmax="100" />
+	<display details="22" />
+
+	<plugin name="autolevels" url="../../autolevels.swf" enabled="true" coloradjust="0.7" adaptation="0.01" effect="0.8" attenuation=".25"/>	
+	<include url="autolevels-ui.xml" />
+	
+	<image type="CUBESTRIP">
+		<cubestrip url="pano.jpg" />
+	</image>
+</krpano>

@@ -1,0 +1,187 @@
+<!--
+	Just a little plugin that tries to help in setting the values, tweaking
+	them using sliders, for the plugin "autolevels.swf" from Aldo Hoeben. !!!
+	Hope it can be useful ;)
+	
+	This plugin is based on the "slider-blend-cubes" example from Klaus.
+	
+	usage: just include this xml to your main xml....
+		<include url="autolevels-ui.xml" />
+-->
+
+<krpano version="1.0.8">	
+
+	<style 	name="S_slider_bg" url="white.jpg" zorder="1" align="bottom" width="200" height="8" x="0" handcursor="false" alpha="0.1" />
+
+	<style 	name="S_slider_grip" url="white.jpg" zorder="2" align="lefttop" width="24" height="8" x="0" y="0" blendmode="add" 
+			effect="glow(0xFFFFFF,0.7,4,2);glow(0x000000,1,4,2);dropshadow(3,45,0x000000,2,0.6);"/>
+
+	<plugin name="enabled_slider_bg"   style="S_slider_bg" y="80" />
+	<plugin name="enabled_slider_grip" style="S_slider_grip" parent="enabled_slider_bg"  
+			onloaded="set(width,100);loadslider(enabled,get(name),get(parent));"	
+			ondown="startdragingslider(enabled,get(name),get(parent));set(onover,'');"
+			onup="stopdragingslider();set(onover,'showtext(enabled,FOVTEXT);');"
+			onover="showtext(enabled,FOVTEXT);"
+			/>	
+
+	<plugin name="effect_slider_bg"   style="S_slider_bg" y="70" />
+	<plugin name="effect_slider_grip" style="S_slider_grip" parent="effect_slider_bg" 
+			onloaded="loadslider(effect,get(name),get(parent))"
+			ondown="startdragingslider(effect,get(name),get(parent));set(onover,'');"
+			onup="stopdragingslider();set(onover,'showtext(effect,FOVTEXT);');"
+			onover="showtext(effect,FOVTEXT);"
+			/>	
+
+	<plugin name="adaptation_slider_bg"   style="S_slider_bg" y="60" />
+	<plugin name="adaptation_slider_grip" style="S_slider_grip" parent="adaptation_slider_bg"
+			onloaded="loadslider(adaptation,get(name),get(parent))"
+			ondown="startdragingslider(adaptation,get(name),get(parent));set(onover,'');"
+			onup="stopdragingslider();set(onover,'showtext(adaptation,FOVTEXT);');"
+			onover="showtext(adaptation,FOVTEXT);"
+			/>
+
+	<plugin name="coloradjust_slider_bg"   style="S_slider_bg" y="50" />
+	<plugin name="coloradjust_slider_grip" style="S_slider_grip" parent="coloradjust_slider_bg"
+			onloaded="loadslider(coloradjust,get(name),get(parent))"
+			ondown="startdragingslider(coloradjust,get(name),get(parent));set(onover,'');"
+			onup="stopdragingslider();set(onover,'showtext(coloradjust,FOVTEXT);');"
+			onover="showtext(coloradjust,FOVTEXT);"
+			/>
+
+	<plugin name="threshold_slider_bg"   style="S_slider_bg" y="40" />
+	<plugin name="threshold_slider_grip" style="S_slider_grip" parent="threshold_slider_bg" 
+			onloaded="loadslider(threshold,get(name),get(parent))"
+			ondown="startdragingslider(threshold,get(name),get(parent));set(onover,'');"
+			onup="stopdragingslider();set(onover,'showtext(threshold,FOVTEXT);');"
+			onover="showtext(threshold,FOVTEXT);"
+			/>
+
+	<plugin name="attenuation_slider_bg"   style="S_slider_bg" y="30" />
+	<plugin name="attenuation_slider_grip" style="S_slider_grip" parent="attenuation_slider_bg"
+			onloaded="loadslider(attenuation,get(name),get(parent))"
+			ondown="startdragingslider(attenuation,get(name),get(parent));set(onover,'');"
+			onup="stopdragingslider();set(onover,'showtext(attenuation,FOVTEXT);');"
+			onover="showtext(attenuation,FOVTEXT);"
+			/>
+			
+	<plugin name="htmltext" url="%SWFPATH%/plugins/textfield.swf" 
+			visible="false"
+			align="center"
+			width="200" height="" 
+			html="data:code"
+			borderwidth="10"
+			bordercolor="0xFFFFFF"
+			backgroundcolor="0xFFFFFF"
+			autosize="center"		
+			effect="glow(0xFFFFFF,0.7,4,2);glow(0x000000,1,4,2);dropshadow(3,45,0x000000,2,0.6);"
+			/>
+	
+	<data 	name="code">
+	</data> 
+
+	<style 	name="buttonstyle"
+			url="%SWFPATH%/plugins/textfield.swf" keep="true" children="false"
+			css="p{color:#000000; font-family:Arial; font-weight:bold; font-size:12; text-align:center; }"
+			backgroundcolor="0xFFFFFF" roundedge="5" shadow="1" borderwidth="0" glow="4" glowcolor="0xFFFFFF" visible="false" 
+			onover="tween(alpha,0.7,distance(0.3,0.2));"
+			onout="tween(alpha,1.0,distance(0.3,0.2));"
+			onloaded="set(alpha,0);set(textblur,15);set(blur,15); set(visible,true); tween(alpha,1,0.3); tween(textblur,0,0.3); tween(blur,0,0.3);"
+			width="60" height="18"
+			/>
+
+	<plugin name="b1" style="buttonstyle"
+	    	html="[p]show xml[/p]"
+	    	align="bottom" x="68" y="7"
+			onclickA="set(plugin[htmltext].visible,true); set(html,[p]hide xml[/p]); set(onclick,onclickB());"
+			onclickB="set(plugin[htmltext].visible,false); set(html,[p]show xml[/p]); set(onclick,showcode(); onclickA(););"
+	    	onclick="showcode(); onclickA();"
+	    	/>
+
+	<textstyle name="FOVTEXT" origin="bottom" edge="leftbottom" yoffset="6" xoffset="-100" textalign="left" background="false" border="false" fontsize="16" textcolor="0xFFFFFF" bold="false" effect="glow(0xFFFFFF,0.7,4,1);glow(0x000000,1,4,1);dropshadow(3,45,0x000000,2,0.6);" showtime="2.0" fadetime="1.0" />
+	
+	<action name="loadslider">
+		set(temp,plugin[autolevels].%1);
+		if(plugin[autolevels].%1 == '',	set(plugin[autolevels].%1,0); );
+		if(temp == 'plugin[autolevels].%1', set(plugin[autolevels].%1,0); );
+		set(val, get(plugin[autolevels].%1)); 
+		if( %1 == enabled , if( val EQ true , set(val,1); , set(val,0); );  );
+		if( %1 == threshold , div(val,255) );
+		sub(xmax, plugin[%3].width, plugin[%2].width);
+		mul(val, xmax);
+		tween(plugin[%2].x, get(val));
+	</action>
+	
+	<action name="startdragingslider">trace('plugin[autolevels].%1 = ',plugin[autolevels].%1);
+		set(plugin[%2].backup_align, get(plugin[%2].align));
+		set(plugin[%2].backup_edge,  get(plugin[%2].edge));
+
+		plugin[%2].changeorigin(lefttop,lefttop);
+
+		sub(mouse_x_offset, plugin[%2].x, mouse.x);
+		sub(mouse_y_offset, plugin[%2].y, mouse.y);
+
+		set(image_dragging,true);
+
+		dragslider(%1,%2,%3);
+	</action>
+
+
+	<action name="stopdragingslider">
+		set(image_dragging, false);
+	</action>
+
+
+	<action name="dragslider">
+		if(image_dragging,
+			add(xpos, mouse.x, mouse_x_offset);
+			sub(xmax, plugin[%3].width, plugin[%2].width);
+			if(xpos LT 0, set(xpos,0));
+			if(xpos GT xmax, copy(xpos,xmax));
+			copy(plugin[%2].x, xpos);
+
+			<!-- val = 0.0 ... 1.0 -->
+			div(val, xpos, xmax);
+			autolevels_settings(%1);
+
+			delayedcall(0.01, dragslider(%1,%2,%3) );
+		  ,
+			plugin[%2].changeorigin(get(plugin[%2].backup_align), get(plugin[%2].backup_edge));
+		  );
+	</action>
+
+
+	<action name="autolevels_settings">	 
+		if( %1 == enabled , if( val GT 0.5 , set(val,true); , set(val,false); );  );
+		if( %1 == effect , roundval(val,2); );
+		if( %1 == adaptation , if( val LT 0.01 , set(val,0.01); ); roundval(val,2); );
+		if( %1 == coloradjust , roundval(val,2); );
+		if( %1 == threshold , if(val GT 0, mul(val,255); roundval(val); ) );
+		if( %1 == attenuation , roundval(val,2); );
+		set(plugin[autolevels].%1, get(val));
+		showvaltext(%1);
+		showcode();
+	</action>
+	
+	
+	<action name="showvaltext">
+		txtadd(msg,%1,' = ',get(val));
+		showtext(get(msg),FOVTEXT);
+	</action>
+	
+	
+	<action name="showcode">
+		txtadd(msg,'&lt;plugin name="autolevels" <br/>',
+					'url="',get(plugin[autolevels].url),'" <br/>',
+					'enabled="',get(plugin[autolevels].enabled),'" <br/>',
+					'effect="',get(plugin[autolevels].effect),'" <br/>',
+					'adaptation="',get(plugin[autolevels].adaptation),'" <br/>',
+					'coloradjust="',get(plugin[autolevels].coloradjust),'" <br/>',
+					'threshold="',get(plugin[autolevels].threshold),'" <br/>',
+					'attenuation="',get(plugin[autolevels].attenuation),'" /&gt;',
+					);
+		set(data[code].content,get(msg));
+		set(plugin[htmltext].html,data:code);
+	</action>
+
+
+</krpano>
