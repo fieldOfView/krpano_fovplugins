@@ -25,4 +25,5 @@ License
 -------
 
 The plugins can be used free of charge and the source code is 
-available under a [CC-GNU GPL](http://creativecommons.org/licenses/GPL/2.0/) license.
+available under a [Creative Commons Attribution](http://creativecommons.org/licenses/by/3.0/) license.
+
