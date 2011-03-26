@@ -52,8 +52,9 @@
 	
 	The gyro object in krpano mirrors the functionality of the javascript object, but enabled, deviceAvailable and adaptiveV are read-only properties instead of functioncalls. 
 	
-	This software is licensed under the CC-GNU GPL version 2.0 or later
-	http://creativecommons.org/licenses/GPL/2.0/
+	This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
+	http://creativecommons.org/licenses/by/3.0/
+
 */
 
 if (!this.krpanoGyro) {

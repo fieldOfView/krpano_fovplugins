@@ -72,5 +72,5 @@ are read-only properties instead of functioncalls.
 License
 -------
 
-This software is licensed under the CC-GNU GPL version 2.0:
-http://creativecommons.org/licenses/GPL/2.0/
+This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
+http://creativecommons.org/licenses/by/3.0/
