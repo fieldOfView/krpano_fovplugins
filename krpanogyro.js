@@ -24,33 +24,49 @@
 	if (krpano.isHTML5possible()) {
 		krpano.useHTML5("always");
 		krpano.embed();
-		gyro = krpanoGyro(krpano);
-		//gyro.disable();
+		krpanoGyro(krpano);
 	}
 	[/code]
 
-	The gyro object contains the following functions:
 
-	gyro.enable();
-	gyro.disable(); 
-	gyro.toggle();
-	gyro.deviceAvailable();
-	gyro.setAdaptiveV();
-	gyro.adaptiveV();
+	The script creates an object named "gyro" in krpano which can be used to enable/disable the gyro. 
+	This object has the following properties:
+	[code]
+		gyro.deviceavailable 
+			Used to determine if the gyro device is available 
+			true/false, read-only
+		gyro.enabled;
+			Enable or disable gyroscopic navigation 
+			true/false, default: true
+		gyro.easing;
+			Dampen gyroscopic navigation. '0' means no dampening (twitchy behavior), 1 means infinite dampening (ie: no gyroscopic behavior)
+			0-1, default: 0.5
+		gyro.adaptivev;
+			Determine whether the view returns to the pitch value of the device after manually swiping
+			true/false, default: false
+	[/code]
+	You can access these properties through scripting, and/or you can set them in your xml (see example below)
 	
-	The script also creates an object named "gyro" in krpano which can be used to enable/disable the gyro.
+	For convenience and backwards compatibility, the object also has the following methods:
+	[code]
+		gyro.enable()
+		gyro.disable() 
+		gyro.toggle()
+			Set krpano.enabled 
+		gyro.setadaptivev();
+			Set krpano.adaptivev
+	[/code]
+	
 	The following creates a button to toggle the gyroscope that is only visible when the gyro device is detected, and enables the adaptive vertical offset.
 	[code]
 	<krpano ... onstart="initgyro()">
 		...
+		<gyro easing="0.1" adaptivev="true" />
 		<plugin name="gyrotoggle" visible="false" ... onclick="gyro.toggle();" />
 		<action name="initgyro"> 
 			copy(plugin[gyrotoggle].visible, gyro.deviceAvailable);
-			gyro.setAdaptiveV(true);
 		</action>
 	[/code]
-	
-	The gyro object in krpano mirrors the functionality of the javascript object, but enabled, deviceAvailable and adaptiveV are read-only properties instead of functioncalls. 
 	
 	This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
 	http://creativecommons.org/licenses/by/3.0/
@@ -63,22 +79,10 @@ if (!this.krpanoGyro) {
 			krpano,
 			objectname,
 			
-			o = {
-				 enable:						enable
-				,disable:						disable
-				,toggle:						toggle
-				,deviceAvailable: function() {	return isDeviceEnabled; }
-				,deviceavailable:				false
-				,enabled: function() {			return isEnabled; }
-				,setAdaptiveV: 					setAdaptiveVOffset
-				,setadaptivev: 					setAdaptiveVOffset
-				,adaptiveV: function() {		return isAdaptiveVOffset; }
-				,adaptivev:						false
-				,toString: function() {			return "[object krpanoGyro]"; }
-			}, // note: krpano converts calls/methodnames to lowercase
-			
 			isEnabled = false,
 			isAdaptiveVOffset = false,
+			isEasing = 0.5;
+
 			isTouching = false,
 			
 			hoffset = 0, voffset = 0,
@@ -104,17 +108,49 @@ if (!this.krpanoGyro) {
 		}
 
 		function startGyro() {
+			var gyroobject = {
+				 deviceavailable:				true
+				,enabled:						isEnabled
+				,enable:						enable
+				,disable:						disable
+				,toggle:						toggle
+				,easing:						isEasing
+				,adaptivev: 					isAdaptiveVOffset
+				,setadaptivev: 					setAdaptiveVOffset
+			}
+			gyroobject.__defineSetter__("enabled", function (arg) {
+				if(Boolean(arg))
+					enable();
+				else
+					disable();
+			});
+			gyroobject.__defineGetter__("enabled", function (arg) {
+				return isEnabled;
+			});	
+
+			gyroobject.__defineSetter__("adaptivev", function (arg) {
+				setAdaptiveVOffset(arg)
+			});
+			gyroobject.__defineGetter__("adaptivev", function (arg) {
+				return isAdaptiveVOffset;
+			});			
+			
+			gyroobject.__defineSetter__("easing", function (arg) {
+				isEasing = Math.max(Math.min(arg, 1), 0);
+			});
+			gyroobject.__defineGetter__("easing", function (arg) {
+				return isEasing;
+			});
+			
+			krpano.set("gyro", gyroobject);
+			
 			// get offsets for defaultview
 			hoffset = krpano.get("view.hlookat");
 			voffset = krpano.get("view.vlookat");
-			krpano.set("gyro", o);
-			krpano.set("gyro.deviceavailable", true);
-			krpano.set("gyro.adaptivev", isAdaptiveVOffset);
-			krpano.set("gyro.enabled", isEnabled);
-
-			enable();			
+			
+			enable();
 		}
-
+		
 		////////////////////////////////////////////////////////////
 		
 		function enable() {
@@ -124,8 +160,6 @@ if (!this.krpanoGyro) {
 				krpano.addEventListener("touchend", handleTouchEnd, true);		
 				krpano.addEventListener("touchcancel", handleTouchEnd, true);	
 				isEnabled = true;
-				if(krpano)
-					krpano.set("gyro.enabled", true);
 			}
 			return isEnabled;
 		}
@@ -137,8 +171,6 @@ if (!this.krpanoGyro) {
 				krpano.removeEventListener("touchend", handleTouchEnd);		
 				krpano.removeEventListener("touchcancel", handleTouchEnd);	
 				isEnabled = false;
-				if(krpano)
-					krpano.set("gyro.enabled", false);
 			}
 			return isEnabled;
 		}
@@ -151,19 +183,10 @@ if (!this.krpanoGyro) {
 		}
 		
 		function setAdaptiveVOffset(arg) {
-			switch(arg) {
-				case 0, "0", false, "false":
-					isAdaptiveVOffset = false;
-					break;
-				case 1, "1", true, "true":
-					isAdaptiveVOffset = true;
-					break;
-				default:
-					isAdaptiveVOffset = !isAdaptiveVOffset;
-					break;
-			}
-			if (krpano && krpano.set != undefined)
-				krpano.set("gyro.adaptivev", isAdaptiveVOffset);
+			if(arg==undefined || arg === null || arg == "")
+				isAdaptiveVOffset = !isAdaptiveVOffset;
+			else
+				isAdaptiveVOffset = Boolean(arg); 
 		}
 
 		////////////////////////////////////////////////////////////
@@ -188,7 +211,9 @@ if (!this.krpanoGyro) {
 					yaw = orientation.yaw / degRad,
 					pitch = orientation.pitch / degRad,
 					altyaw = yaw,
-					factor;
+					factor,
+					hlookatnow = krpano.get("view.hlookat"),
+					vlookatnow = krpano.get("view.vlookat");
 
 				// fix gimbal lock
 				if( Math.abs(pitch) > 70 ) {
@@ -214,20 +239,26 @@ if (!this.krpanoGyro) {
 					factor = Math.min( 1, ( Math.abs( pitch ) - 70 ) / 10 );
 					yaw = yaw * ( 1-factor ) + altyaw * factor;
 				}
-
+				
 				// track view change since last orientation event
 				// -> user has manually panned, or krpano has altered lookat
-				hoffset += krpano.get("view.hlookat") - hlookat;
-				voffset += krpano.get("view.vlookat") - vlookat;
+				hoffset += hlookatnow - hlookat;
+				voffset += vlookatnow - vlookat;
 				
 				// clamp voffset
 				if(Math.abs( pitch + voffset ) > 90) {
 					voffset = ( pitch+voffset > 0 ) ? (90 - pitch) : (-90 - pitch)
 				}
-				
+
 				hlookat = (-yaw -180 + hoffset ) % 360;
 				vlookat = Math.max(Math.min(( pitch + voffset ),90),-90);
-				
+
+				// dampen lookat
+				if(Math.abs(hlookat - hlookatnow) > 180) 
+					hlookatnow += (hlookat > hlookatnow)?360:-360;
+				hlookat = (1-isEasing)*hlookat + isEasing*hlookatnow;
+				vlookat = (1-isEasing)*vlookat + isEasing*vlookatnow;
+								
 				krpano.call( "lookat(" + hlookat + "," + vlookat + ")" );
 				
 				adaptVOffset();
@@ -285,9 +316,9 @@ if (!this.krpanoGyro) {
 		
 		///////////////////////////////////////////////////
 		
-		return o;
+		return { toString: function() { return "[object krpanoGyro]"; } };
 	};
 }
 
 // Comment out or edit the following line if you want to use a custom krpano object or a different object name
-var gyro = krpanoGyro();
+krpanoGyro();
