@@ -230,6 +230,10 @@ if (!this.krpanoGyro) {
 						case -90: 
 							altyaw += -90;
 							break;
+						case 180:
+							if ( pitch<0 ) 
+								altyaw += 180;
+							break;
 					}
 					
 					altyaw = altyaw % 360;

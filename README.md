@@ -1,7 +1,7 @@
 krpano gyroscope script for iOS 4.2 
 ===================================
-by Aldo Hoeben / fieldofview.com  
-contributions by Sjeiti / ronvalstar.nl
+by [Aldo Hoeben / fieldOfView](http://fieldofview.com/) 
+contributions by [Sjeiti](ronvalstar.nl/) 
 
 This script uses the gyroscope in iOS devices such as the 
 iPhone 4 and iPod Touch 4th generation to control the camera in
@@ -72,5 +72,4 @@ The following creates a button to toggle the gyroscope that is only visible when
 License
 -------
 
-This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
-http://creativecommons.org/licenses/by/3.0/
+This software can be used free of charge and the source code is available under a [Creative Commons Attribution](http://creativecommons.org/licenses/by/3.0/) license.
