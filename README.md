@@ -1,7 +1,7 @@
 krpano gyroscope script for iOS 4.2 
 ===================================
 by [Aldo Hoeben / fieldOfView](http://fieldofview.com/) 
-contributions by [Sjeiti](ronvalstar.nl/) 
+contributions by [Sjeiti](http://ronvalstar.nl/) 
 
 This script uses the gyroscope in iOS devices such as the 
 iPhone 4 and iPod Touch 4th generation to control the camera in
