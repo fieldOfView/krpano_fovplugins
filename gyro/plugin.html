@@ -1,0 +1,126 @@
+<!-- krpano plugin page template -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" type="text/css" media="screen" href="http://krpano.com/design/design.css"/>
+<link rel="stylesheet" type="text/css" media="print" href="http://krpano.com/design/print.css"/>
+</head>
+<body>
+<div id="krpano_root">
+  <div id="krpano_headerwrapper">
+    <div id="krpano_header">
+      <div id="krpano_langsel">&nbsp;</div>
+      <div id="krpano_mainmenu">&nbsp;</div>
+    </div>
+  </div>
+  <div>
+    <div id="krpano_imagebar"></div>
+    <div id="krpano_logo"></div>
+  </div>
+  <div id="krpano_imagebar_space"></div>
+  <div id="krpano_contentwrapper">
+    <div id="krpano_content">
+      <div id="krpano_contentnav">
+        <h2><a href="#top" class="selflink">Plugins</a></h2>
+      </div>
+      <a name="top"></a>
+      <div id="krpano_contenttext"> 
+        <!-- USER CONTENT STARTS HERE -->
+        
+        <h1>Gyroscope Plugin <span class="pluginfilename">gyro.js</span> 
+          <span class="flashhtml5">for HTML5</span>
+          <div class="pluginautor">by Aldo Hoeben - <a href="http://fieldofview.com">fieldofview.com</a><br>
+          With contributions by <a href="http://ronvalstar.nl">Sjeiti</a> and <a href="http://krpano.com">Klaus</a>
+          </div>
+        </h1>
+        <div class="paragraph">
+          <h2><a name="description" href="#description" class="selflink">Description</a></h2>
+          <p>This plugin uses the gyroscope in iOS devices such as the iPhone 4 and iPad 2 to control the view in
+krpanoJS.</p>
+        </div>
+        <div class="paragraph">
+          <h2><a name="download" href="#download" class="selflink">Download</a></h2>
+          <div class="dlitem"> <a href="http://fieldofview.github.com/krpano_fovplugins/gyro.js">gyro.js</a>&nbsp; <small>(plugin only)</small></div>
+          <p>The gyro <a href="https://github.com/fieldOfView/krpano_fovplugins/tree/master/dblclick">sources and examples</a> are available as part of the fovplugins package</p>
+          <div class="dlitem"> <a href="https://github.com/fieldOfView/krpano_fovplugins/zipball/master">fovplugins.zip</a>&nbsp; <small>(plugin, source code &amp; examples)</small><br/>
+          </div>
+        </div>
+        <div class="paragraph">
+          <h2><a name="forum" href="#forum" class="selflink">krpano Forum Discussion Thread</a></h2>
+          <a href="http://krpano.com/forum/wbb/index.php?page=Thread&postID=23264">Gyroscope Plugin Thread</a> </div>
+        <div class="paragraph">
+          <h2><a name="syntax" href="#syntax" class="selflink">Syntax / XML Usage Example</a></h2>
+          <pre class="xmlpre">&lt;<a href="http://krpano.com/docu/xml/#plugin">plugin</a> <a href="http://krpano.com/docu/xml/#plugin.name">name</a>="gyro" 
+        <a href="http://krpano.com/docu/xml/#plugin.url">url</a>="gyro.js" 
+        <a href="http://krpano.com/docu/xml/#plugin.keep">keep</a>="true"
+        <a href="#enabled" class="pluginattrib">enabled</a>="true"
+        <a href="#camroll" class="pluginattrib">camroll</a>="true"
+        <a href="#friction" class="pluginattrib">friction</a>="0.5"
+        <a href="#velastic" class="pluginattrib">velastic</a>="0.2"
+        /&gt;</pre>
+        </div>
+        <div class="paragraph">
+          <h2><a name="attributes" href="#attributes" class="selflink">Plugin Attributes</a></h2>
+          <dl>
+            <dt><a name="available" href="#available" class="selflink">available</a></dt>
+            <dd>This read-only attribute is only set to true if the browser/device is generating deviceorientation events. It can be used to determine if a ui for the gyroscope is applicable.<br>
+              values: true/false, read-only</dd>
+            <dt><a name="enabled" href="#enabled" class="selflink">enabled</a></dt>
+            <dd>Enabled and/or disables the gyroscope for navigation.<br>
+              values: true/false, default: true</dd>
+            <dt><a name="camroll" href="#camroll" class="selflink">camroll</a></dt>
+            <dd> Determines whether or not the camera rotates around the roll axis.<br>
+              values: true/false, default: false</dd>
+            <dt><a name="friction" href="#friction" class="selflink">friction</a></dt>
+            <dd> Dampens the gyroscope values, making the result less &quot;twitchy&quot;. 0 means no dampening, 1 is infinite dampening (ie: no gyroscope movement)<br>
+              values: 0-1, default: 0.5</dd>
+            <dt><a name="velastic" href="#velastic" class="selflink">velastic</a></dt>
+            <dd>If set to a value greater than 0, the vlookat parameter returns to the device pitch after manually altering the view. The higher the value, the faster the view returns to the device pitch.<br>
+              values: 0-1, default: 0</dd>
+          </dl>
+        </div>
+        <div class="paragraph">
+          <h2><a name="example" href="#example" class="selflink">Example</a></h2>
+          <script>
+			function showexample() 
+			{
+				var iframe = '<iframe id="ccexample" name="ccframe" src="examples/gyro.html" width="100%"  height="300" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+				document.getElementById("example").innerHTML = iframe;
+			}
+		</script>
+          <div id="example" onclick="showexample();" style="width:100%;height:300px;color:white;background-color:black;border:1px solid gray;cursor:pointer;">
+            <table width="100%" height="100%" style="color:white;">
+              <tr valign="middle">
+                <td><center>
+                    <b>CLICK TO VIEW EXAMPLE</b>
+                  </center></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="paragraph">
+          <h2><a name="license" href="#license" class="selflink">License</a></h2>
+          <p><a href="http://creativecommons.org/licenses/by/3.0/"><img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="CC-BY-3.0" width="88px" height="31px" hspace="8" border="0" align="right"></a> The plugin can be used free of charge, in commercial or non-commercial applications. The source code is  available under a <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution</a> license.</p>
+          <p>In a nutshell, this means you are free to use the software and its source code in your projects. If you use the source code in a another software project, you are required to add attribution to the author(s). You are encouraged to share the your source code under a similar fashion, but it is not a requirement.</p>
+        </div>
+        <!-- USER CONTENT ENDS HERE --> 
+      </div>
+    </div>
+  </div>
+  <div id="krpano_footerwrapper">
+    <div id="krpano_footer">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td align="right">Copyright &copy; 2011 krpano.com</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

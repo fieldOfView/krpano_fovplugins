@@ -30,7 +30,7 @@
       <div id="krpano_contenttext"> 
         <!-- USER CONTENT STARTS HERE -->
         
-        <h1>fieldOfView krpano plugins <span class="flashhtml5">for Flash</span>
+        <h1>fieldOfView krpano plugins <span class="flashhtml5">for Flash and/or HTML5</span>
           <div class="pluginautor">by Aldo Hoeben - <a href="http://fieldofview.com">fieldofview.com</a></div>
         </h1>
         <div class="paragraph">
@@ -40,15 +40,17 @@
         <div class="paragraph">
           <h2><a name="plugins" href="#plugins" class="selflink">Plugins</a></h2>
           <dl>
-            <dt><a name="autolevels" href="autolevels/plugin.html">autolevels</a></dt>
+            <dt><a name="autolevels" href="autolevels/plugin.html">autolevels</a><span class="flashhtml5">for Flash</span></dt>
             <dd>A plugin that dynamically applies an autolevels effect to the krpano view. When properly used, this can mimic autoexposure of a (video-)camera, or the adaptation of the human perceptive system.</dd>
-            <dt><a name="dblclick" href="dblclick/plugin.html">dblclick</a></dt>
-            <dd>A plugin that adds a doubleclick event to krpano.</dd>
-            <dt><a name="clipboard" href="clipboard/plugin.html">clipboard</a></dt>
+            <dt><a name="clipboard" href="clipboard/plugin.html">clipboard</a><span class="flashhtml5">for Flash</span></dt>
             <dd>A plugin that provides write-only access to the clipboard. This is useful eg to put a link to the current view into the viewer's clipboard.</dd>
-            <dt><a name="string" href="string/plugin.html">string</a></dt>
+            <dt><a name="dblclick" href="dblclick/plugin.html">dblclick</a><span class="flashhtml5">for Flash</span></dt>
+            <dd>A plugin that adds a doubleclick event to krpano.</dd>
+            <dt><a name="gyro" href="gyro/plugin.html">gyro</a><span class="flashhtml5">for HTML5</span></dt>
+            <dd>A plugin that uses the gyroscope in devices such as the iPhone 4 and iPad2 to control the view.</dd>
+            <dt><a name="string" href="string/plugin.html">string</a><span class="flashhtml5">for Flash</span></dt>
             <dd>A plugin that adds vector-math calculations to krpano.</dd>
-            <dt><a name="vectormath" href="vectormath/plugin.html">vectormath</a></dt>
+            <dt><a name="vectormath" href="vectormath/plugin.html">vectormath</a><span class="flashhtml5">for Flash</span></dt>
             <dd>A plugin that adds string manipulation functions to krpano.</dd>
           </dl>
         </div>
@@ -60,10 +62,11 @@
         </div>
         <div class="paragraph">
           <h2><a name="compiling" href="#compiling" class="selflink">Compiling</a></h2>
-          <p>To build the plugins from the supplied source files, you need the <a href="http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK">open source Flex SDK</a>, version 3.2 or newer.</p>
+          <p>To build the flash plugins from the supplied source files, you need the <a href="http://opensource.adobe.com/wiki/display/flexsdk/Flex+SDK">open source Flex SDK</a>, version 3.2 or newer.</p>
           <p>To compile a swf, use the following commandline options (in a  single line):</p>
           <pre>mxmlc -target-player=10.0.0 -use-network=false
-    -static-link-runtime-shared-libraries=true [filename].as  </pre>
+    -static-link-runtime-shared-libraries=true [filename].as</pre>
+          <p>Javascript are simply compressed using the YUI compressor. Alternatively you may use the source-version instead of the compressed version.</p>
         </div>
         <div class="paragraph">
           <h2><a name="license" href="#license" class="selflink">License</a></h2>
