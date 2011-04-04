@@ -3,7 +3,7 @@
 	
 	<events onloadcomplete="delayedcall(4, hideintrotext() ); set(events.onloadcomplete,null);" />
 	
-	<plugin name="dblclick" url="../../dblclick.swf" ondblclick="switch(fullscreen)" />	
+	<plugin name="dblclick" url="../../dblclick.swf" alturl="../../dblclick.js" ondblclick="trace(double click);switch(fullscreen)" />	
 	
 	<plugin name="introbox"	url="%SWFPATH%/plugins/textfield.swf"
 			backgroundcolor="0x000000" border="false" roundedge="60"
