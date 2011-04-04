@@ -17,12 +17,15 @@ A series of krpano plugins by [Aldo Hoeben / fieldOfView](http://fieldofview.com
 * **dblclick**  
 	A plugin that adds a doubleclick event to krpano. 
 
-* **vectormath**  
-	A plugin that adds vector-math calculations to krpano.
-
+* **gyro**  
+	A plugin that uses the gyroscope in devices such as the iPhone 4 
+	and iPad2 to control the view.
+	
 * **string**  
 	A plugin that adds string manipulation functions to krpano. 
 
+* **vectormath**  
+	A plugin that adds vector-math calculations to krpano.
 
 Examples
 --------

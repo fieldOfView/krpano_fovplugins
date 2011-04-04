@@ -102,7 +102,7 @@ var krpanoplugin = function()
 
 	function disable()
 	{
-		if (isDeviceEnabled && isEnabled)
+		if (isDeviceAvailable && isEnabled)
 		{
 			window.removeEventListener("deviceorientation", handleDeviceOrientation);
 			krpano.control.layer.removeEventListener("touchstart",  handleTouchStart);

@@ -22,7 +22,7 @@ var krpanoplugin = function()
 		
 		if (krpano.version < "1.0.8.14" || krpano.build < "2011-03-30")
 		{
-			krpano.trace(3,"gyro plugin - too old krpano version (min. 1.0.8.14)");
+			krpano.trace(3,"string plugin - too old krpano version (min. 1.0.8.14)");
 			return;
 		}
 
