@@ -19,7 +19,7 @@ var krpanoplugin = function()
 		isEnabled = false,
 		vElasticity = 0,
 		isCamRoll = false,
-		easing = 0.5,
+		friction = 0.5,
 
 		isTouching = false,
 		hOffset = 0, vOffset = 0, 
@@ -51,7 +51,7 @@ var krpanoplugin = function()
 		plugin.registerattribute("enabled",  true,  function(arg){ stringToBoolean(arg) ? enable() : disable() }, function(){ return isEnabled; });
 		plugin.registerattribute("velastic", 0,	    function(arg){ vElasticity = Math.max(Math.min(Number(arg), 1), 0); krpano.trace(0,(1-Math.pow(vElasticity,2))); }, function() { return vElasticity; });
 		plugin.registerattribute("camroll",  false, function(arg){ isCamRoll = stringToBoolean(arg); }, function() { return isCamRoll; });
-		plugin.registerattribute("easing",   0.5,   function(arg){ easing = Math.max(Math.min(Number(arg), 1), 0); }, function() { return easing; });
+		plugin.registerattribute("friction",   0.5,   function(arg){ friction = Math.max(Math.min(Number(arg), 1), 0); }, function() { return friction; });
 		
 		// register methods
 		plugin.enable  = enable;
@@ -222,12 +222,12 @@ var krpanoplugin = function()
 			if(Math.abs(hLookAt - hLookAtNow) > 180) 
 				hLookAtNow += (hLookAt > hLookAtNow)?360:-360;
 			
-			hLookAt = (1-easing)*hLookAt + easing*hLookAtNow;
-			vLookAt = (1-easing)*vLookAt + easing*vLookAtNow;
+			hLookAt = (1-friction)*hLookAt + friction*hLookAtNow;
+			vLookAt = (1-friction)*vLookAt + friction*vLookAtNow;
 			
 			if(Math.abs(camRoll - camRollNow) > 180) 
 				camRollNow += (camRoll > camRollNow)?360:-360;
-			camRoll = (1-easing)*camRoll + easing*camRollNow;
+			camRoll = (1-friction)*camRoll + friction*camRollNow;
 			
 			krpano.view.hlookat = wrapAngle(hLookAt);
 			krpano.view.vlookat = vLookAt;
