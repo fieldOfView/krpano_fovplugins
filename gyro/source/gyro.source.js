@@ -1,13 +1,13 @@
 /*
-	krpano iOS 4.2 gyroscope script
-	by Aldo Hoeben / fieldofview.com
-	contributions by 
-		Sjeiti / ronvalstar.nl
-		Klaus / krpano.com
-		
-	https://github.com/fieldOfView/krpano_fovplugins/gyro
-	This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
-		http://creativecommons.org/licenses/by/3.0/		
+gyro plugin for KRPanoJS and iOS4.2+
+by Aldo Hoeben / fieldOfView.com
+contributions by 
+	Sjeiti / ronvalstar.nl
+	Klaus / krpano.com
+	
+http://fieldofview.github.com/krpano_fovplugins/gyro/plugin.html
+This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
+	http://creativecommons.org/licenses/by/3.0/	
 */
 
 var krpanoplugin = function()

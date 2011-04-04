@@ -1,10 +1,10 @@
 /*
-	krpano HTML5 dblclick plugin
-	by Aldo Hoeben / fieldofview.com
-		
-	http://fieldofview.github.com/krpano_fovplugins/dblclick/plugin.html
-	This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
-		http://creativecommons.org/licenses/by/3.0/		
+dblclick plugin for KRPanoJS
+by Aldo Hoeben / fieldOfView.com
+
+http://fieldofview.github.com/krpano_fovplugins/dblclick/plugin.html
+This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
+	http://creativecommons.org/licenses/by/3.0/	
 */
 
 var krpanoplugin = function()

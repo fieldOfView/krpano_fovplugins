@@ -1,10 +1,10 @@
 /*
-String utility plugin for KRPano
-by Aldo Hoeben
+string plugin for KRPano
+by Aldo Hoeben / fieldOfView.com
 
-
-This software is licensed under the CC-GNU GPL version 2.0 or later
-http://creativecommons.org/licenses/GPL/2.0/
+http://fieldofview.github.com/krpano_fovplugins/string/plugin.html
+This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
+	http://creativecommons.org/licenses/by/3.0/	
 */
 
 package {
