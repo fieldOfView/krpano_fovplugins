@@ -195,6 +195,7 @@ var krpanoplugin = function()
 			
 			krpano.view.hlookat = hlookat;
 			krpano.view.vlookat = vlookat;
+			krpano.view.camroll = 180 + Number(window.orientation) - orientation.roll  / degRad;	// camroll added
 				
 			adaptVOffset();
 		}
