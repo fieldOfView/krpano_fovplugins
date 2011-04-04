@@ -12,25 +12,25 @@
 
 var krpanoplugin = function()
 {
-	function BOOLEAN(value) { return (String("yesontrue1").indexOf( String(value).toLowerCase() ) >= 0); };	// boolen cast helper function
+	var local = this,
+		krpano = null, plugin = null,
 	
-	var local = this;
-	
-	var krpano = null;
-	var plugin = null;
-	
-	var isDeviceEnabled = !!window.DeviceOrientationEvent;
-	var isEnabled = false;
-	var isAdaptiveVOffset = false;
-	var isEasing = 0.5;
+		isDeviceAvailable,
+		isEnabled = false,
+		vElasticity = 0,
+		isCamRoll = false,
+		easing = 0.5,
 
-	var	isTouching = false;
-	var hoffset = 0, voffset = 0, hlookat = 0, vlookat = 0;
-			
-	var degRad = Math.PI/180;
-			
+		isTouching = false,
+		hOffset = 0, vOffset = 0, 
+		hLookAt = 0, vLookAt = 0, camRoll = 0,
+		vElasticSpeed = 0,
+		
+		degRad = Math.PI/180;
+
+	////////////////////////////////////////////////////////////
+	// plugin management
 	
-	// registerplugin - startup point for the plugin
 	local.registerplugin = function(krpanointerface, pluginpath, pluginobject)
 	{
 		krpano = krpanointerface;
@@ -42,22 +42,27 @@ var krpanoplugin = function()
 			return;
 		}
 
-		plugin.registerattribute("enabled",   true,  function(arg){ BOOLEAN(arg) ? enable() : disable() }, function(){ return isEnabled; });
-		plugin.registerattribute("adaptivev", false, function(arg){ setAdaptiveVOffset(arg); }, function() { return isAdaptiveVOffset; });
-		plugin.registerattribute("easing",    false, function(arg){ isEasing = Math.max(Math.min(Number(arg), 1), 0); }, function() { return isEasing; });
+		// initiate device check
+		if(!!window.DeviceOrientationEvent)
+			window.addEventListener("deviceorientation", handleDeviceCheck);
 		
+		// register attributes
+		plugin.registerattribute("available",false, function(arg){}, function(){ return isDeviceAvailable; });
+		plugin.registerattribute("enabled",  true,  function(arg){ stringToBoolean(arg) ? enable() : disable() }, function(){ return isEnabled; });
+		plugin.registerattribute("velastic", 0,	    function(arg){ vElasticity = Math.max(Math.min(Number(arg), 1), 0); krpano.trace(0,(1-Math.pow(vElasticity,2))); }, function() { return vElasticity; });
+		plugin.registerattribute("camroll",  false, function(arg){ isCamRoll = stringToBoolean(arg); }, function() { return isCamRoll; });
+		plugin.registerattribute("easing",   0.5,   function(arg){ easing = Math.max(Math.min(Number(arg), 1), 0); }, function() { return easing; });
+		
+		// register methods
 		plugin.enable  = enable;
 		plugin.disable = disable;
 		plugin.toggle  = toggle;
-			
-		// get offsets for defaultview
-		hoffset = krpano.view.hlookat;
-		voffset = krpano.view.vlookat;
 	}
 		
 		
 	local.unloadplugin = function()
 	{
+		window.removeEventListener("deviceorientation", handleDeviceCheck);
 		disable();
 		
 		plugin = null;
@@ -66,16 +71,28 @@ var krpanoplugin = function()
 	
 	
 	////////////////////////////////////////////////////////////
-		
+	// public methods
+	
 	function enable()
 	{
-		if (isDeviceEnabled && !isEnabled)
+		if (isDeviceAvailable === undefined) 
+		{
+			isEnabled = true;
+			return;
+		}		
+			
+		if (isDeviceAvailable && !isEnabled)
 		{
 			window.addEventListener("deviceorientation", handleDeviceOrientation, true);
 			krpano.control.layer.addEventListener("touchstart",  handleTouchStart, true);
 			krpano.control.layer.addEventListener("touchend",    handleTouchEnd,   true);		
 			krpano.control.layer.addEventListener("touchcancel", handleTouchEnd,   true);	
 			isEnabled = true;
+			
+			hOffset = -window.orientation;
+			vOffset = 0;
+			hLookAt = 0;
+			vLookAt = 0;
 		}
 		else
 		{
@@ -92,7 +109,7 @@ var krpanoplugin = function()
 			krpano.control.layer.removeEventListener("touchend",    handleTouchEnd);		
 			krpano.control.layer.removeEventListener("touchcancel", handleTouchEnd);	
 		}
-		
+
 		isEnabled = false;
 	}
 		
@@ -104,15 +121,23 @@ var krpanoplugin = function()
 			enable();
 	}
 		
-	function setAdaptiveVOffset(arg)
-	{
-		if(arg==undefined || arg === null || arg == "")
-			isAdaptiveVOffset = !isAdaptiveVOffset;
-		else
-			isAdaptiveVOffset = BOOLEAN(arg); 
-	}
-
 	////////////////////////////////////////////////////////////
+	// private methods	
+	
+	function handleDeviceCheck(event)
+	{
+		// deviceorientation events are being generated
+		isDeviceAvailable = true;
+
+		window.removeEventListener("deviceorientation", handleDeviceCheck);
+
+		// if this event came after any event that set the "enabled" property, call enable() now
+		if(isEnabled) 
+		{
+			isEnabled = false;
+			enable();
+		}
+	}
 		
 	function handleTouchStart(event)
 	{
@@ -134,85 +159,105 @@ var krpanoplugin = function()
 						pitch: event["beta"] * degRad, 
 						roll: event["gamma"] * degRad 
 				} ) ),
-				yaw = orientation.yaw / degRad,
+				yaw = wrapAngle( orientation.yaw / degRad ),
 				pitch = orientation.pitch / degRad,
-				altyaw = yaw,
+				altYaw = yaw,
 				factor,
-				hlookatnow = krpano.view.hlookat,
-				vlookatnow = krpano.view.vlookat;
+				hLookAtNow = krpano.view.hlookat,
+				vLookAtNow = krpano.view.vlookat,
+				camRollNow = krpano.view.camroll,
+				hSpeed = hLookAtNow - hLookAt,
+				vSpeed = vLookAtNow - vLookAt;
 
+			if(isCamRoll) {
+				camRoll = wrapAngle( 180 + Number(window.orientation) - orientation.roll  / degRad );
+			}
+				
 			// fix gimbal lock
 			if( Math.abs(pitch) > 70 )
 			{
-				altyaw = event.alpha; 
+				altYaw = event.alpha; 
 					
 				switch(window.orientation)
 				{
 					case 0:
 						if ( pitch>0 ) 
-							altyaw += 180;
+							altYaw += 180;
 						break;
 					case 90: 
-						altyaw += 90;
+						altYaw += 90;
 						break;
 					case -90: 
-						altyaw += -90;
+						altYaw += -90;
 						break;
 					case 180:
 						if ( pitch<0 ) 
-							altyaw += 180;
+							altYaw += 180;
 						break;
 				}
 					
-				altyaw = altyaw % 360;
-				if( Math.abs( altyaw - yaw ) > 180 ) 
-					altyaw += ( altyaw < yaw ) ? 360 : -360;
+				altYaw = wrapAngle(altYaw);
+				if( Math.abs( altYaw - yaw ) > 180 ) 
+					altYaw += ( altYaw < yaw ) ? 360 : -360;
 					
 				factor = Math.min( 1, ( Math.abs( pitch ) - 70 ) / 10 );
-				yaw = yaw * ( 1-factor ) + altyaw * factor;
+				yaw = yaw * (1 - factor) + altYaw * factor;
+				
+				camRoll *= (1 - factor);
 			}
 				
 			// track view change since last orientation event
-			// -> user has manually panned, or krpano has altered lookat
-			hoffset += hlookatnow - hlookat;
-			voffset += vlookatnow - vlookat;
+			// ie: user has manually panned, or krpano has altered lookat
+			hOffset += hSpeed;
+			vOffset += vSpeed;
 				
-			// clamp voffset
-			if(Math.abs( pitch + voffset ) > 90)
-			{
-				voffset = ( pitch+voffset > 0 ) ? (90 - pitch) : (-90 - pitch)
-			}
+			// clamp vOffset
+			if(Math.abs( pitch + vOffset ) > 90)
+				vOffset = ( pitch+vOffset > 0 ) ? (90 - pitch) : (-90 - pitch)
 
-			hlookat = (-yaw -180 + hoffset ) % 360;
-			vlookat = Math.max(Math.min(( pitch + voffset ),90),-90);
+			hLookAt = wrapAngle(-yaw -180 + hOffset );
+			vLookAt = Math.max(Math.min(( pitch + vOffset ),90),-90);
 
 			// dampen lookat
-			if(Math.abs(hlookat - hlookatnow) > 180) 
-				hlookatnow += (hlookat > hlookatnow)?360:-360;
+			if(Math.abs(hLookAt - hLookAtNow) > 180) 
+				hLookAtNow += (hLookAt > hLookAtNow)?360:-360;
 			
-			hlookat = (1-isEasing)*hlookat + isEasing*hlookatnow;
-			vlookat = (1-isEasing)*vlookat + isEasing*vlookatnow;
+			hLookAt = (1-easing)*hLookAt + easing*hLookAtNow;
+			vLookAt = (1-easing)*vLookAt + easing*vLookAtNow;
 			
-			krpano.view.hlookat = hlookat;
-			krpano.view.vlookat = vlookat;
-			krpano.view.camroll = 180 + Number(window.orientation) - orientation.roll  / degRad;	// camroll added
+			if(Math.abs(camRoll - camRollNow) > 180) 
+				camRollNow += (camRoll > camRollNow)?360:-360;
+			camRoll = (1-easing)*camRoll + easing*camRollNow;
+			
+			krpano.view.hlookat = wrapAngle(hLookAt);
+			krpano.view.vlookat = vLookAt;
+			krpano.view.camroll = wrapAngle(camRoll);
 				
-			adaptVOffset();
-		}
-	}
-
-	function adaptVOffset()
-	{
-		if( voffset != 0 && isAdaptiveVOffset )
-		{
-			voffset *= 0.98;
-			if( Math.abs( voffset ) < 0.1 ) 
+			if( vOffset != 0 && vElasticity > 0 ) 
 			{
-				voffset = 0;
-			}
+				if( vSpeed == 0)
+				{
+					if( vElasticity == 1) 
+					{
+						vOffset = 0;
+						vElasticSpeed = 0;
+					}
+					else
+					{
+						vElasticSpeed = 1 - ((1 - vElasticSpeed) * krpano.control.touchfriction);
+						vOffset *= 1 - (Math.pow(vElasticity,2) * vElasticSpeed); // use Math.pow to be able to use saner values
+											
+						if( Math.abs( vOffset ) < 0.1 ) {
+							vOffset = 0;
+							vElasticSpeed = 0;
+						}
+					}
+				} 
+				else
+					vElasticSpeed = 0;
+			} 
 		}
 	}
-
 	
 	function rotateEuler( euler )
 	{
@@ -262,5 +307,10 @@ var krpanoplugin = function()
 			
 		return new Object( { yaw:heading, pitch:attitude, roll:bank } ) 
 	}
-}
 
+	////////////////////////////////////////////////////////////
+	// utility functions
+	
+	function wrapAngle(value)	{ value = value % 360; return (value<=180)? value : value-360;	} // wrap a value between -180 and 180
+	function stringToBoolean(value) { return (String("yesontrue1").indexOf( String(value).toLowerCase() ) >= 0); };	// boolean cast helper function
+}
