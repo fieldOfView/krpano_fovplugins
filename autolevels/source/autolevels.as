@@ -39,11 +39,7 @@ package {
 		
 		private var panosprite:Sprite = null;
 		private var meterbitmap:BitmapData = null;
-		
-		private var preview:Bitmap = null;
-		
-		private var t:Number=0;
-		
+				
 		public function autolevels() {
 			if (stage == null) {
 				this.addEventListener(Event.ADDED_TO_STAGE, this.startPlugin);
@@ -82,11 +78,6 @@ package {
 			this.panosprite = krpano.get("image.layer");
 			this.meterbitmap = new BitmapData(80,60,false);
 	
-			this.preview = new Bitmap();
-			this.preview.x = 10;
-			this.preview.y = 10;
-			//addChild(this.preview);
-
 			this.activecolortransform = new ColorTransform();
 
 			// todo: only update scalematrix on screen resizes
@@ -226,8 +217,6 @@ package {
 			this.meterbitmap.draw(this.panosprite,this.scalematrix);
 			var histogram:Vector.<Vector.<Number>> = meterbitmap.histogram();
 			
-			this.preview.bitmapData = this.meterbitmap;
-
 			// analyse histogram
 			var minvalues:Array = new Array();
 			var maxvalues:Array = new Array();
