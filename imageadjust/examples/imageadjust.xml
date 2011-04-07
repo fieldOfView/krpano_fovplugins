@@ -1,0 +1,10 @@
+<krpano version="1.0.8">
+	<view hlookat="0" vlookat="0" fov="65" maxpixelzoom="1.0" fovmax="100" />
+	
+	<plugin name="imageadjust" url="../../imageadjust.swf" enabled="true" saturation="0" hue="0" />	
+	<include url="imageadjust-ui.xml" />
+	
+	<image type="CUBESTRIP">
+		<cubestrip url="pano.jpg" />
+	</image>
+</krpano>
