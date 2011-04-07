@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title>fieldofview krpano plugins - orientation plugin example</title>
+	<style>
+		body{ font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#FFFFFF; background-color:#000000; margin:0; padding:0; }
+		* html, * html body{ overflow: hidden; }
+		a{ color:#AAAAAA; text-decoration:underline; }
+		a:hover{ color:#FFFFFF; text-decoration:underline; }
+	</style>
+</head>
+<body>
+
+<div id="krpanoDIV">
+	<noscript><table width="100%" height="100%"><tr valign="middle"><td><center>ERROR:<br><br>Javascript not activated<br><br></center></td></tr></table></noscript>
+</div>
+
+<script type="text/javascript" src="../../../swfkrpano.js"></script>
+
+<script type="text/javascript">
+// <![CDATA[
+
+	var swf = createswf("../../../krpano.swf", "krpanoSWFObject", "100%", "100%");
+	swf.addVariable("xml", "orientation.xml");
+	swf.embed("krpanoDIV");
+
+// ]]>
+</script>
+
+</body>
+</html>

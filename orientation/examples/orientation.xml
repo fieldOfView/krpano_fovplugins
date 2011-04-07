@@ -1,0 +1,30 @@
+<krpano version="1.0.8" onstart="updateorientation();" >
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+
+	<plugin name="orientation" devices="html5" url="../../orientation.js" onorientationchange="updateorientation" preload="true"  />
+
+	<plugin name="unknown-ui" url="%SWFPATH%/plugins/textfield.swf" visible="true"
+		autosize="left" html="[p]The device is in unknown orientation[/p]" css="data:cssdata" />	
+		
+	<plugin name="landscape-ui" url="%SWFPATH%/plugins/textfield.swf" visible="false"
+		autosize="left" html="[p]The device is in landscape orientation[/p]" css="data:cssdata" />
+	<plugin name="portrait-ui" url="%SWFPATH%/plugins/textfield.swf" visible="false"
+		autosize="left" html="[p]The device is in portrait orientation[/p]" css="data:cssdata" />
+		
+	<data name="cssdata">
+		p{color:#FF0000; font-family:Arial; font-size:24;}
+	</data>
+	
+	<action name="updateorientation">
+		if(isHTML5,
+			set(plugin[unknown-ui].visible, false);
+			copy(plugin[landscape-ui].visible, plugin[orientation].landscape);
+			copy(plugin[portrait-ui].visible, plugin[orientation].portrait);
+			trace(get(plugin[orientation].orientation));
+		,
+			set(plugin[unknown-ui].visible, true);
+			copy(plugin[landscape-ui].visible, false);
+			copy(plugin[portrait-ui].visible, false);			
+		);
+	</action>
+</krpano>
