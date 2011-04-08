@@ -6,7 +6,7 @@
 	<plugin name="dblclick" url="../../dblclick.swf" alturl="../../dblclick.js" ondblclick="trace(double click);switch(fullscreen)" />	
 	
 	<plugin name="introbox"	url="%SWFPATH%/plugins/textfield.swf"
-			backgroundcolor="0x000000" border="false" roundedge="60"
+			backgroundcolor="0x000000" backgroundalpha=".6" border="false" roundedge="60" textshadow="1"
 			height="60" width="500"	y="-11%" align="center"	
 			css="p{color: #FFFFFF; font-family: Arial; font-size: 20; leading:-7; text-align: center;}"
 			html="[p][/p][p]Drag to look around, doubleclick to go fullscreen.[/p]"
