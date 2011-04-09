@@ -83,8 +83,8 @@
             <dd>Sets destVar to the angle between the two vectors defined by ('ath1', 'atv1') and ('ath2', 'atv2').</dd>
             <dt><a name="normal" href="#normal" class="selflink">normal</a>(destVarH, destVarV, ath1, atv1, ath2, atv2)</dt>
             <dd>Sets destVarH and destVarV to align with the normal of the two vectors defined by ('ath1', 'atv1') and ('ath2', 'atv2').</dd>
-            <dt><a name="rotatevector" href="#rotatevector" class="selflink">rotatevector</a>(destVarH, destVarV, ath1, atv1, ath2, atv2)</dt>
-            <dd>Sets destVarH and destVarV to align with the vector ('ath1', 'atv1') after it has been rotated by ('ath2', 'atv2').</dd>
+            <dt><a name="rotatevector" href="#rotatevector" class="selflink">rotatevector</a>(destVarH, destVarV, destVarRotate, ath1, atv1, rotate1, ath2, atv2, rotate2)</dt>
+            <dd>Sets destVarH, destVarV and destVarRotate to align with the vector ('ath1', 'atv1', 'rotate1') after it has been rotated by ('ath2', 'atv2', 'rotate2').</dd>
           </dl>
           <p>Note that all parameters except destVar are taken as literals. If you   want to pass the value of a variable or property, you have to use the get() function.</p>
           <p>All angles are specified and returned in degrees, and axis rotations are done in the same order as in krpano. </p>

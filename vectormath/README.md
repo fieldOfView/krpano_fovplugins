@@ -21,8 +21,8 @@ A krpano plugin that provides a number of vector math methods:
 	Sets destVar to the angle between the two vectors defined by ('ath1', 'atv1') and ('ath2', 'atv2')
 * `normal(destVarH, destVarV, ath1, atv1, ath2, atv2)`  
 	Sets destVarH and destVarV to align with the normal of the two vectors defined by ('ath1', 'atv1') and ('ath2', 'atv2')
-* `rotatevector(destVarH, destVarV, ath1, atv1, ath2, atv2)`  
-	Sets destVarH and destVarV to align with the vector ('ath1', 'atv1') after it has been rotated by ('ath2', 'atv2')
+* `rotatevector(destVarH, destVarV, destVarRotate, ath1, atv1, rotate1, ath2, atv2, rotate2)`  
+	Sets destVarH, destVarV and destVarRotate to align with the vector ('ath1', 'atv1', 'rotate1') after it has been rotated by ('ath2', 'atv2', 'rotate2')
 	
 All angles are specified and returned in degrees, and axis rotations are done in the same order as krpano does them. 
 	
