@@ -1,7 +1,7 @@
 <krpano version="1.0.8">
 	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
 	
-	<plugin name="vectormath" url="../../vectormath.swf" />	
+	<plugin name="vectormath" url="../../vectormath.swf" preload="true" />	
 	
 	<style name="cubeface" distorted="true" enabled="false" width="1000" height="1000" alpha="0.5" />
 	<hotspot name="pano_f" style="cubeface" url="pano_f.jpg" ath="0"   atv="0"   rotate="0" visible="true" />

@@ -1,7 +1,7 @@
-<krpano version="1.0.8" onstart="delayedcall(0.1,string_tests())">
+<krpano version="1.0.8" onstart="string_tests(); startticker()">
 	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
 	
-	<plugin name="string" url="../../string.swf" alturl="../../string.js" />	
+	<plugin name="string" url="../../string.swf" alturl="../../string.js" preload="true" />	
 	
 	<data name="test_string">This is a long string contained in a krpano data node. This will be used for testing the plugin.</data>
 	
@@ -23,5 +23,41 @@
 		plugin[string].txtfind(position, get(data[test_string].content), "This will");
 		plugin[string].txtchunk(chunk, get(data[test_string].content), get(position));
 		trace(chunk);
+	</action>
+	
+		
+	<plugin name="tickertext" url="%SWFPATH%/plugins/textfield.swf" 
+			origin="center" 
+			width="160" height="20" 
+			x="0" y="0" 
+			html=""
+			borderwidth="1"
+			bordercolor="0xFFFFFF"
+			backgroundcolor="0xFFFFFF"
+			/>
+
+	<action name="startticker">
+		plugin[string].txtlength(tickertape_length, get(data[test_string].content));
+
+		set(ticker_length,0);
+		set(ticker_offset,0);
+		delayedcall(0.25, tickertick);
+	</action>
+
+	<action name="tickertick">
+		plugin[string].txtchunk(chunk, get(data[test_string].content), get(ticker_offset), get(ticker_length));
+		txtadd(plugin[tickertext].html, "[p]", get(chunk), "[/p]");
+
+		if(ticker_length LT 30,
+		  inc(ticker_length);
+			delayedcall(0.15, tickertick);
+		,
+		  if(ticker_offset LT tickertape_length,
+			inc(ticker_offset);
+			delayedcall(0.15, tickertick);
+			,	
+			delayedcall(5, startticker);
+		  );
+		);
 	</action>
 </krpano>
