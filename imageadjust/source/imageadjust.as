@@ -116,13 +116,15 @@ package {
 			this.plugin_object.registerattribute("brightness", 0);
 			this.plugin_object.registerattribute("contrast", 0);
 			this.plugin_object.registerattribute("blurradius", 0);
+
+			this.plugin_object.registerattribute("adjust", interface_adjust);
 			
-			this.enabled = (this.plugin_object.enabled!=null)? Boolean(this.plugin_object.enabled):true;
+			this.enabled =    (this.plugin_object.enabled!=null)?    Boolean(this.plugin_object.enabled):true;
 			this.hue =        (this.plugin_object.hue!=null)?        Math.min(Math.max(this.plugin_object.hue,-180),180):0;
 			this.saturation = (this.plugin_object.saturation!=null)? Math.min(Math.max(this.plugin_object.saturation,-1),1):0;
 			this.brightness = (this.plugin_object.brightness!=null)? Math.min(Math.max(this.plugin_object.brightness,-1),1):0;
 			this.contrast =   (this.plugin_object.contrast!=null)?   Math.min(Math.max(this.plugin_object.contrast,-1),1):0;
-			this.contrast =   (this.plugin_object.contrast!=null)?   Math.max(this.plugin_object.contrast,0):0;
+			this.blurradius = (this.plugin_object.blurradius!=null)? Math.max(this.plugin_object.blurradius,0):0;
 
 			updateFilters();
 				
@@ -176,6 +178,16 @@ package {
 			}
 			
 			panosprite.filters = imagefilters;
+		}
+		
+		public function interface_adjust(brightness:Number = 0, contrast:Number = 0, hue:Number = 0, saturation:Number = 0, blurradius:Number = 0) : void {
+			this.brightness = Math.min(Math.max(brightness,-1),1);
+			this.contrast =   Math.min(Math.max(contrast,-1),1);
+			this.hue =        Math.min(Math.max(hue,-180),180);
+			this.saturation = Math.min(Math.max(saturation,-1),1);
+			this.blurradius = Math.max(blurradius,0);
+			
+			updateFilters();
 		}
 	}
 }

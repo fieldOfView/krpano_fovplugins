@@ -19,6 +19,12 @@ The following parameter are available:
 * `blurradius` (>=0)  
     blurring of the krpano display 
 
+The parameters can also be set all at once with a single utility method:
+
+* `adjust(brightness, contrast, hue, saturation, blurradius)`  
+	sets each of the respective properties in one go
+
+
 
 How to build
 ------------
