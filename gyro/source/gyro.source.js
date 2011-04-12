@@ -44,7 +44,7 @@ var krpanoplugin = function()
 
 		// initiate device check
 		if(!!window.DeviceOrientationEvent)
-			window.addEventListener("deviceorientation", handleDeviceCheck, true);
+			window.addEventListener("deviceorientation", handleDeviceCheck);
 		
 		// register attributes
 		plugin.registerattribute("available",false, function(arg){}, function(){ return isDeviceAvailable; });
