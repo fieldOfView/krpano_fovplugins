@@ -1,5 +1,5 @@
 <krpano version="1.0.8">
-	<view hlookat="-45" vlookat="0" fov="65" fovmax="100" />
+	<view hlookat="-45" vlookat="0" fov="80" fovmax="100" />
 
 	<plugin name="gyro" url="../../gyro.js" enabled="true" camroll="true" friction="0.5" velastic="0.2" devices="html5" keep="true" />
 		

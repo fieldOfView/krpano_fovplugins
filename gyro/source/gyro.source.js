@@ -89,7 +89,7 @@ var krpanoplugin = function()
 			krpano.control.layer.addEventListener("touchcancel", handleTouchEnd,   true);	
 			isEnabled = true;
 			
-			hOffset = -window.orientation;
+			hOffset = -top.orientation;
 			vOffset = 0;
 			hLookAt = 0;
 			vLookAt = 0;
@@ -170,7 +170,7 @@ var krpanoplugin = function()
 				vSpeed = vLookAtNow - vLookAt;
 
 			if(isCamRoll) {
-				camRoll = wrapAngle( 180 + Number(window.orientation) - orientation.roll  / degRad );
+				camRoll = wrapAngle( 180 + Number(top.orientation) - orientation.roll  / degRad );
 			}
 				
 			// fix gimbal lock
@@ -178,7 +178,7 @@ var krpanoplugin = function()
 			{
 				altYaw = event.alpha; 
 					
-				switch(window.orientation)
+				switch(top.orientation)
 				{
 					case 0:
 						if ( pitch>0 ) 
