@@ -1,0 +1,60 @@
+<krpano version="1.0.8" onstart="startbobbing()">
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+	
+	<plugin name="vectormath" url="../../vectormath.swf" preload="true" />	
+	
+	<style name="cubeface" distorted="true" enabled="false" width="1000" height="1000" alpha="0.5" />
+	<hotspot name="pano_f" style="cubeface" url="pano_f.jpg" ath="0"   atv="0"   rotate="0" />
+	<hotspot name="pano_r" style="cubeface" url="pano_r.jpg" ath="90"  atv="0"   rotate="0" />
+	<hotspot name="pano_l" style="cubeface" url="pano_l.jpg" ath="-90" atv="0"   rotate="0" />
+	<hotspot name="pano_b" style="cubeface" url="pano_b.jpg" ath="180" atv="0"   rotate="0" />	
+	<hotspot name="pano_u" style="cubeface" url="pano_u.jpg" ath="0"   atv="-90" rotate="0" />
+	<hotspot name="pano_d" style="cubeface" url="pano_d.jpg" ath="0"   atv="90"  rotate="0" />	
+	
+	<action name="startbobbing">
+		hbob();
+		vbob();
+		rbob();
+		update_faces();
+	</action>
+	
+	<action name="hbob">
+		if(hbob_value === null,
+			set(hbob_value,.5);
+		,
+			mul(hbob_value, -1);
+		);
+		tween(hotspot[pano_f].ath, get(hbob_value), 3.7, easeInOutCubic, hbob);
+	</action>
+	<action name="vbob">
+		if(vbob_value === null,
+			set(vbob_value,1);
+		,
+			mul(vbob_value, -1);
+		);
+		tween(hotspot[pano_f].atv, get(vbob_value), 2, easeInOutCubic, vbob);
+	</action>	
+	<action name="rbob">
+		if(rbob_value === null,
+			set(rbob_value,.5);
+		,
+			mul(rbob_value, -1);
+		);
+		tween(hotspot[pano_f].rotate, get(rbob_value), 1.6, easeInOutCubic, vbob);
+	</action>	
+
+	<action name="update_faces">
+		plugin[vectormath].rotatevector(hotspot[pano_r].ath, hotspot[pano_r].atv, hotspot[pano_r].rotate,
+			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 90,0,0);
+		plugin[vectormath].rotatevector(hotspot[pano_l].ath, hotspot[pano_l].atv, hotspot[pano_l].rotate,
+			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), -90,0,0);
+		plugin[vectormath].rotatevector(hotspot[pano_b].ath, hotspot[pano_b].atv, hotspot[pano_b].rotate,
+			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 180, 0,0);	
+		plugin[vectormath].rotatevector(hotspot[pano_u].ath, hotspot[pano_u].atv, hotspot[pano_u].rotate,
+			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 0, -90,0);
+		plugin[vectormath].rotatevector(hotspot[pano_d].ath, hotspot[pano_d].atv, hotspot[pano_d].rotate,
+			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 0, 90,0);	
+			
+		delayedcall(0.01, update_faces);
+	</action>
+</krpano>
