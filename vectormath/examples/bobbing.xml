@@ -4,6 +4,7 @@
 	<plugin name="vectormath" url="../../vectormath.swf" preload="true" />	
 	
 	<style name="cubeface" distorted="true" enabled="false" width="1000" height="1000" alpha="0.5" />
+	<hotspot name="proxy" style="cubeface" url="white.jpg" ath="0"   atv="0"   rotate="0" visible="false" />
 	<hotspot name="pano_f" style="cubeface" url="pano_f.jpg" ath="0"   atv="0"   rotate="0" />
 	<hotspot name="pano_r" style="cubeface" url="pano_r.jpg" ath="90"  atv="0"   rotate="0" />
 	<hotspot name="pano_l" style="cubeface" url="pano_l.jpg" ath="-90" atv="0"   rotate="0" />
@@ -24,7 +25,7 @@
 		,
 			mul(hbob_value, -1);
 		);
-		tween(hotspot[pano_f].ath, get(hbob_value), 3.7, easeInOutCubic, hbob);
+		tween(hotspot[proxy].ath, get(hbob_value), 3.7, easeInOutCubic, hbob);
 	</action>
 	<action name="vbob">
 		if(vbob_value === null,
@@ -32,7 +33,7 @@
 		,
 			mul(vbob_value, -1);
 		);
-		tween(hotspot[pano_f].atv, get(vbob_value), 2, easeInOutCubic, vbob);
+		tween(hotspot[proxy].atv, get(vbob_value), 2, easeInOutCubic, vbob);
 	</action>	
 	<action name="rbob">
 		if(rbob_value === null,
@@ -40,20 +41,22 @@
 		,
 			mul(rbob_value, -1);
 		);
-		tween(hotspot[pano_f].rotate, get(rbob_value), 1.6, easeInOutCubic, vbob);
+		tween(hotspot[proxy].rotate, get(rbob_value), 1.6, easeInOutCubic, vbob);
 	</action>	
 
 	<action name="update_faces">
+		plugin[vectormath].rotatevector(hotspot[pano_f].ath, hotspot[pano_f].atv, hotspot[pano_f].rotate,
+			get(hotspot[proxy].ath), get(hotspot[proxy].atv), get(hotspot[proxy].rotate), 0,0,0);
 		plugin[vectormath].rotatevector(hotspot[pano_r].ath, hotspot[pano_r].atv, hotspot[pano_r].rotate,
-			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 90,0,0);
+			get(hotspot[proxy].ath), get(hotspot[proxy].atv), get(hotspot[proxy].rotate), 90,0,0);
 		plugin[vectormath].rotatevector(hotspot[pano_l].ath, hotspot[pano_l].atv, hotspot[pano_l].rotate,
-			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), -90,0,0);
+			get(hotspot[proxy].ath), get(hotspot[proxy].atv), get(hotspot[proxy].rotate), -90,0,0);
 		plugin[vectormath].rotatevector(hotspot[pano_b].ath, hotspot[pano_b].atv, hotspot[pano_b].rotate,
-			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 180, 0,0);	
+			get(hotspot[proxy].ath), get(hotspot[proxy].atv), get(hotspot[proxy].rotate), 180, 0,0);	
 		plugin[vectormath].rotatevector(hotspot[pano_u].ath, hotspot[pano_u].atv, hotspot[pano_u].rotate,
-			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 0, -90,0);
+			get(hotspot[proxy].ath), get(hotspot[proxy].atv), get(hotspot[proxy].rotate), 0, -90,0);
 		plugin[vectormath].rotatevector(hotspot[pano_d].ath, hotspot[pano_d].atv, hotspot[pano_d].rotate,
-			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 0, 90,0);	
+			get(hotspot[proxy].ath), get(hotspot[proxy].atv), get(hotspot[proxy].rotate), 0, 90,0);	
 			
 		delayedcall(0.01, update_faces);
 	</action>
