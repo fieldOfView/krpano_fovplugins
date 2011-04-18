@@ -41,7 +41,7 @@
 		,
 			mul(rbob_value, -1);
 		);
-		tween(hotspot[proxy].rotate, get(rbob_value), 1.6, easeInOutCubic, vbob);
+		tween(hotspot[proxy].rotate, get(rbob_value), 1.6, easeInOutCubic, rbob);
 	</action>	
 
 	<action name="update_faces">
