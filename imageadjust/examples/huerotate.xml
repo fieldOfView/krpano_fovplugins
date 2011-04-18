@@ -1,0 +1,16 @@
+<krpano version="1.0.8" onstart="repeatinghueshift">
+	<view hlookat="0" vlookat="0" fov="65" maxpixelzoom="1.0" fovmax="100" />
+	
+	<plugin name="imageadjust" url="../../imageadjust.swf" preload="true" enabled="true" saturation="0" hue="0" />	
+
+	<action name="repeatinghueshift">
+		if(plugin[imageadjust].hue==180,
+		  set(plugin[imageadjust].hue,-180);
+		);
+		tween(plugin[imageadjust].hue,180,4,linear,repeatinghueshift);
+	</action>
+	
+	<image type="CUBESTRIP">
+		<cubestrip url="pano.jpg" />
+	</image>
+</krpano>
