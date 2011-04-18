@@ -4,18 +4,14 @@
 	<plugin name="vectormath" url="../../vectormath.swf" preload="true" />	
 	
 	<style name="cubeface" distorted="true" enabled="false" width="1000" height="1000" alpha="0.5" />
-	<hotspot name="pano_f" style="cubeface" url="pano_f.jpg" ath="0"   atv="0"   rotate="0" visible="true" />
-	<hotspot name="pano_f2" style="cubeface" url="pano_f.jpg" ath="0"   atv="0"   rotate="0" />
-	<hotspot name="pano_r" style="cubeface" url="pano_r.jpg" ath="90"  atv="0"   rotate="0" visible="true" />
-	<hotspot name="pano_l" style="cubeface" url="pano_l.jpg" ath="-90" atv="0"   rotate="0" visible="true" />
-	<hotspot name="pano_b" style="cubeface" url="pano_b.jpg" ath="180" atv="0"   rotate="0" visible="true" />	
-	<hotspot name="pano_u" style="cubeface" url="pano_u.jpg" ath="0"   atv="-90" rotate="0" visible="true" />
-	<hotspot name="pano_d" style="cubeface" url="pano_d.jpg" ath="0"   atv="90"  rotate="0" visible="true" />	
+	<hotspot name="pano_f" style="cubeface" url="pano_f.jpg" ath="0"   atv="0"   rotate="0" />
+	<hotspot name="pano_r" style="cubeface" url="pano_r.jpg" ath="90"  atv="0"   rotate="0" />
+	<hotspot name="pano_l" style="cubeface" url="pano_l.jpg" ath="-90" atv="0"   rotate="0" />
+	<hotspot name="pano_b" style="cubeface" url="pano_b.jpg" ath="180" atv="0"   rotate="0" />	
+	<hotspot name="pano_u" style="cubeface" url="pano_u.jpg" ath="0"   atv="-90" rotate="0" />
+	<hotspot name="pano_d" style="cubeface" url="pano_d.jpg" ath="0"   atv="90"  rotate="0" />	
 	
 	<action name="update_faces">
-		plugin[vectormath].rotatevector(hotspot[pano_f2].ath, hotspot[pano_f2].atv, hotspot[pano_f2].rotate,
-			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 0,0,0);
-	
 		plugin[vectormath].rotatevector(hotspot[pano_r].ath, hotspot[pano_r].atv, hotspot[pano_r].rotate,
 			get(hotspot[pano_f].ath), get(hotspot[pano_f].atv), get(hotspot[pano_f].rotate), 90,0,0);
 		plugin[vectormath].rotatevector(hotspot[pano_l].ath, hotspot[pano_l].atv, hotspot[pano_l].rotate,

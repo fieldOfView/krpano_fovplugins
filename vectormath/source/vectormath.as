@@ -218,11 +218,11 @@ package {
 			 * [m30 m31 m32 m33] 
 			 */
 
-			if (m[4] > 0.9999) { // singularity at north pole
+			if (m[4] == 1) { // singularity at north pole
 				heading = Math.atan2(m[2],m[10]);
 				attitude = Math.PI/2;
 				bank = 0;
-			} else if (m[4] < -0.9999) { // singularity at south pole
+			} else if (m[4] == -1) { // singularity at south pole
 				heading = Math.atan2(m[2],m[10]);
 				attitude = -Math.PI/2;
 				bank = 0;
