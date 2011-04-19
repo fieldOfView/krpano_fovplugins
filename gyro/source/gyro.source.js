@@ -1,7 +1,7 @@
 /*
 gyro plugin for KRPanoJS and iOS4.2+
 by Aldo Hoeben / fieldOfView.com
-contributions by
+Contributions by
 	Sjeiti / ronvalstar.nl
 	Klaus / krpano.com
 
@@ -29,7 +29,7 @@ var krpanoplugin = function()
 		degRad = Math.PI/180;
 
 	////////////////////////////////////////////////////////////
-	// plugin management
+	// Plugin management
 	
 	local.registerplugin = function(krpanointerface, pluginpath, pluginobject)
 	{
@@ -42,18 +42,18 @@ var krpanoplugin = function()
 			return;
 		}
 
-		// initiate device check
+		// Initiate device check
 		if(!!window.DeviceOrientationEvent)
 			window.addEventListener("deviceorientation", handleDeviceCheck);
 		
-		// register attributes
+		// Register attributes
 		plugin.registerattribute("available",false, function(arg){}, function(){ return isDeviceAvailable; });
 		plugin.registerattribute("enabled",  true,  function(arg){ stringToBoolean(arg) ? enable() : disable() }, function(){ return isEnabled; });
 		plugin.registerattribute("velastic", 0,	    function(arg){ vElasticity = Math.max(Math.min(Number(arg), 1), 0); krpano.trace(0,(1-Math.pow(vElasticity,2))); }, function() { return vElasticity; });
 		plugin.registerattribute("camroll",  false, function(arg){ isCamRoll = stringToBoolean(arg); }, function() { return isCamRoll; });
 		plugin.registerattribute("friction",   0.5,   function(arg){ friction = Math.max(Math.min(Number(arg), 1), 0); }, function() { return friction; });
 		
-		// register methods
+		// Register methods
 		plugin.enable  = enable;
 		plugin.disable = disable;
 		plugin.toggle  = toggle;
@@ -71,7 +71,7 @@ var krpanoplugin = function()
 
 
 	////////////////////////////////////////////////////////////
-	// public methods
+	// Public methods
 
 	function enable()
 	{
@@ -122,7 +122,7 @@ var krpanoplugin = function()
 	}
 
 	////////////////////////////////////////////////////////////
-	// private methods
+	// Private methods
 
 	function handleDeviceCheck(event)
 	{
@@ -131,7 +131,7 @@ var krpanoplugin = function()
 
 		window.removeEventListener("deviceorientation", handleDeviceCheck);
 
-		// if this event came after any event that set the "enabled" property, call enable() now
+		// If this event came after any event that set the "enabled" property, call enable() now
 		if(isEnabled)
 		{
 			isEnabled = false;
@@ -153,7 +153,7 @@ var krpanoplugin = function()
 	{
 		if ( !isTouching && isEnabled )
 		{
-			// process event.alpha, event.beta and event.gamma
+			// Process event.alpha, event.beta and event.gamma
 			var orientation = rotateEuler( new Object( {
 						yaw: event["alpha"] * degRad,
 						pitch: event["beta"] * degRad,
@@ -173,7 +173,7 @@ var krpanoplugin = function()
 				camRoll = wrapAngle( 180 + Number(top.orientation) - orientation.roll  / degRad );
 			}
 
-			// fix gimbal lock
+			// Fix gimbal lock
 			if( Math.abs(pitch) > 70 )
 			{
 				altYaw = event.alpha;
@@ -206,7 +206,7 @@ var krpanoplugin = function()
 				camRoll *= (1 - factor);
 			}
 			
-			// track view change since last orientation event
+			// Track view change since last orientation event
 			// ie: user has manually panned, or krpano has altered lookat
 			hOffset += hSpeed;
 			vOffset += vSpeed;
@@ -261,7 +261,7 @@ var krpanoplugin = function()
 
 	function rotateEuler( euler )
 	{
-		// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
+		// Based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
 		// and http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
 
 		var heading, bank, attitude,
@@ -272,7 +272,7 @@ var krpanoplugin = function()
 			cb = Math.cos(euler.roll),
 			sb = Math.sin(euler.roll);
 
-		// note: includes 90 degree rotation around z axis
+		// Note: Includes 90 degree rotation around z axis
 		matrix = new Array
 			(
 				sh*sb - ch*sa*cb,   -ch*ca,    ch*sa*sb + sh*cb,
@@ -286,14 +286,14 @@ var krpanoplugin = function()
 		
 		if (matrix[3] > 0.9999)
 		{
-			// singularity at north pole
+			// Singularity at north pole
 			heading = Math.atan2(matrix[2],matrix[8]);
 			attitude = Math.PI/2;
 			bank = 0;
 		}
 		else if (matrix[3] < -0.9999)
 		{
-			// singularity at south pole
+			// Singularity at south pole
 			heading = Math.atan2(matrix[2],matrix[8]);
 			attitude = -Math.PI/2;
 			bank = 0;
@@ -309,8 +309,8 @@ var krpanoplugin = function()
 	}
 
 	////////////////////////////////////////////////////////////
-	// utility functions
+	// Utility functions
 
-	function wrapAngle(value)	{ value = value % 360; return (value<=180)? value : value-360;	} // wrap a value between -180 and 180
-	function stringToBoolean(value) { return (String("yesontrue1").indexOf( String(value).toLowerCase() ) >= 0); };	// boolean cast helper function
+	function wrapAngle(value)	{ value = value % 360; return (value<=180)? value : value-360;	} // Wrap a value between -180 and 180
+	function stringToBoolean(value) { return (String("yesontrue1").indexOf( String(value).toLowerCase() ) >= 0); };	// Boolean cast helper function
 }
