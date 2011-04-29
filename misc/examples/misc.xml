@@ -1,0 +1,14 @@
+<krpano version="1.0.8" onstart="test-misc">
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+	
+	<plugin name="misc" url="../../misc.swf" alturl="../../misc.js" preload="true" />	
+	
+	<action name="test-misc">
+		showlog();
+		plugin[misc].forloop(i, -3, 2, 0.8,
+			plugin[misc].abs(j,get(i));
+			roundval(j,1);
+			trace(j);
+		);
+	</action>
+</krpano>

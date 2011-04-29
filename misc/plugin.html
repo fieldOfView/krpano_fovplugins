@@ -1,0 +1,145 @@
+<!-- krpano plugin page template -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="format-detection" content="telephone=no" />
+<title>krpano.com - Plugins - fieldOfView Plugins - misc</title>
+<link rel="stylesheet" type="text/css" media="screen" href="http://krpano.com/design/design.css"/>
+<link rel="stylesheet" type="text/css" media="print" href="http://krpano.com/design/print.css"/>
+<link rel="SHORTCUT ICON" href="http://krpano.com/design/shortcut.ico"/>
+</head>
+<body>
+<div id="krpano_root">
+  <div id="krpano_headerwrapper">
+    <div id="krpano_header">
+      <div id="krpano_langsel">&nbsp;</div>
+      <div id="krpano_mainmenu">&nbsp;</div>
+    </div>
+  </div>
+  <div>
+    <div id="krpano_imagebar"></div>
+    <div id="krpano_logo"></div>
+  </div>
+  <div id="krpano_imagebar_space"></div>
+  <div id="krpano_contentwrapper">
+    <div id="krpano_content">
+      <div id="krpano_contentnav">
+        <h2><a href="/krpano_fovplugins" class="selflink">fovplugins</a></h2>
+        <p>This is the staging area for the fieldOfView plugins for krpano. A copy of these pages is included on krpano.com. The pages in this staging area may be newer than the respective pages on krpano.com.</p>
+        <ul>
+            <li><a href="http://krpano.com/plugins/userplugins/fieldofview">offical krpano.com pages</a></li>
+            <li><a href="https://github.com/fieldofview/krpano_fovplugins">source repository</a></li>
+        </ul>
+      </div>
+      <a name="top"></a>
+      <div id="krpano_contenttext"> 
+        <!-- USER CONTENT STARTS HERE -->
+        
+        <h1>Misc Plugin <span class="pluginfilename">misc.swf</span> 
+          <span class="flashhtml5">for Flash &amp; HTML5</span>
+          <div class="pluginautor">by Aldo Hoeben - <a href="http://fieldofview.com">fieldofview.com</a></div>
+        </h1>
+        <div class="paragraph">
+          <h2><a name="description" href="#description" class="selflink">Description</a></h2>
+          <p>This plugin provides some miscelaneous scripting
+            functionalities that do not fit in with any of the other plugins 
+          in the package. The plugin is intended to go obsolete if and when krpano itself implements these functionalities.</p>
+        </div>
+        <div class="paragraph">
+          <h2><a name="download" href="#download" class="selflink">Download</a></h2>
+          <div class="dlitem"> <a href="http://fieldofview.github.com/krpano_fovplugins/misc.swf">misc.swf</a>&nbsp; <small>(plugin only)</small></div>
+          <div class="dlitem"> <a href="http://fieldofview.github.com/krpano_fovplugins/misc.js">misc.js</a>&nbsp; <small>(plugin only)</small></div>
+          <p>The misc plugin <a href="https://github.com/fieldOfView/krpano_fovplugins/tree/master/misc">sources and examples</a> are available as part of the fovplugins package</p>
+          <div class="dlitem"> <a href="https://github.com/fieldOfView/krpano_fovplugins/zipball/master">fovplugins.zip</a>&nbsp; <small>(plugin, source code &amp; examples)</small><br/>
+          </div>
+        </div>
+        <div class="paragraph">
+          <h2><a name="forum" href="#forum" class="selflink">krpano Forum Discussion Thread</a></h2>
+          <a href="http://krpano.com/forum/wbb/index.php?page=Thread&threadID=4972">Misc Plugin Thread</a> </div>
+        <div class="paragraph">
+          <h2><a name="syntax" href="#syntax" class="selflink">Syntax / XML Usage Example</a></h2>
+          <pre class="xmlpre">&lt;<a href="http://krpano.com/docu/xml/#plugin">plugin</a> <a href="http://krpano.com/docu/xml/#plugin.name">name</a>="misc" 
+        <a href="http://krpano.com/docu/xml/#plugin.url">url</a>="misc.swf" <a href="http://krpano.com/docu/xml/#plugin.alturl">alturl</a>="misc.js" 
+        <a href="http://krpano.com/docu/xml/#plugin.keep">keep</a>="true" <a href="http://krpano.com/docu/xml/#plugin.preload">preload</a>="true"
+        /&gt;
+
+&lt;<a href="http://krpano.com/docu/xml/#action">action</a> <a href="http://krpano.com/docu/xml/#action.name">name</a>="use_misc" &gt;
+        plugin[misc].<a href="#text" class="pluginattrib">forloop</a>(i, 0, 10, 1,
+          plugin[misc].<a href="#text" class="pluginattrib">abs</a>(j,get(i));
+          roundval(j,1);
+          trace(j);
+        );       
+&lt;/<a href="http://krpano.com/docu/xml/#action">action</a>&gt;</pre>
+        </div>
+        <div class="paragraph">
+          <h2><a name="methods" href="#methods" class="selflink">Plugin Methods</a></h2>
+          <dl>
+            <dt><a name="forloop" href="#forloop" class="selflink">forloop</a>(varName, startValue, endValue, stepValue, iterate)</dt>
+            <dd>Iterates the actions/function specified by 'iterate' while setting the variable
+             'varName' from 'startValue' until it reaches 'endValue' in steps set by 'stepValue'.</dd>
+            <dt><a name="abs" href="#abs" class="selflink">abs</a>(destVar, value)</dt>
+            <dd>Sets destVar to the absolute value of 'text'.</dd>
+          </dl>
+        </div>
+        <div class="paragraph">
+          <h2><a name="example" href="#example" class="selflink">Example</a></h2>
+          <script>
+            function showexample() 
+            {
+                var iframe = '<iframe id="ccexample" name="ccframe" src="examples/misc.html" width="100%"  height="300" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+                document.getElementById("example").innerHTML = iframe;
+            }
+        </script>
+          <div id="example" onclick="showexample();" style="width:100%;height:300px;color:white;background-color:black;border:1px solid gray;cursor:pointer;">
+            <table width="100%" height="100%" style="color:white;">
+              <tr valign="middle">
+                <td><center>
+                    <b>CLICK TO VIEW EXAMPLE</b>
+                  </center></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="paragraph">
+          <h2><a name="license" href="#license" class="selflink">License</a></h2>
+          <p><a href="http://creativecommons.org/licenses/by/3.0/"><img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="CC-BY-3.0" width="88px" height="31px" hspace="8" border="0" align="right"></a> The plugin can be used free of charge, in commercial or non-commercial applications. The source code is available under a <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution</a> license.</p>
+          <p>In a nutshell, this means you are free to use the software and its source code in your projects. If you use the source code in another software project, you are required to add attribution to the author(s). You are encouraged to share the your source code under a similar fashion, but it is not a requirement.</p>
+          <p><form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="float:right;margin:0 8px;">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="KZEYXA3FSY6PQ">
+            <input type="image" src="http://files.fieldofview.com/paypal-donate-button.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_US/i/scr/pixel.gif" width="1" height="1">
+          </form> If you use the plugins regularly, you may consider making a donation so I can afford to continue making these plugins and making them available.</p>
+        </div>
+        <!-- USER CONTENT ENDS HERE --> 
+      </div>
+    </div>
+  </div>
+  <div id="krpano_footerwrapper">
+    <div id="krpano_footer">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td align="right">Copyright &copy; 2011 krpano.com</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Piwik -->
+<script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://logs.fieldofview.com/" : "http://logs.fieldofview.com/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 4);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="http://logs.fieldofview.com/piwik.php?idsite=4" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+</body>
+</html>
