@@ -15,7 +15,6 @@ package {
 	import flash.filters.BlurFilter;
 	
 	import krpano_as3_interface;
-	//import HueColorMatrixFilter;
 	import com.gskinner.geom.ColorMatrix;
 	
 	// SWF Metadata
@@ -37,7 +36,6 @@ package {
 		private var imagefilters:Array = [];
 		
 		private var panosprite:Sprite = null;
-		
 		
 		public function imageadjust() {
 			if (stage == null) {
@@ -79,12 +77,6 @@ package {
 			
 			this.krpano.addPluginEventListener(this, krpano_as3_interface.PLUGINEVENT_REGISTER, this.registerPlugin);
 			this.krpano.addPluginEventListener(this, krpano_as3_interface.PLUGINEVENT_UPDATE, this.updatePlugin);
-
-			this.krpano.set("imageadjust.onviewchange", this.viewChanged);
-			var onviewchange:String = this.krpano.get("events.onviewchange");
-			if (onviewchange == null)
-				onviewchange = ""; 
-			this.krpano.set("events.onviewchange", "imageadjust.onviewchange();"+onviewchange);
 			
 			return;
 		}
@@ -96,12 +88,6 @@ package {
 			
 			this.krpano.removePluginEventListener(this, krpano_as3_interface.PLUGINEVENT_REGISTER, this.registerPlugin);
 			this.krpano.removePluginEventListener(this, krpano_as3_interface.PLUGINEVENT_UPDATE, this.updatePlugin);
-			
-			var onviewchange:String = this.krpano.get("events.onviewchange");
-			if (onviewchange == null)
-				onviewchange = "";
-			onviewchange = onviewchange.split("autolevels.onviewchange();").join("");
-			this.krpano.set("events.onviewchange", onviewchange);
 			
 			this.plugin_object = null;
 			this.krpano = null;
@@ -151,11 +137,6 @@ package {
 			updateFilters();			
 		}
 
-		private function viewChanged() : void {
-			if(this.krpano.get("view.fisheye")<0.05) 
-				krpano.set("view.fisheye",0.05);			
-		}
-		
 		private function updateFilters() : void {
 			imagefilters = [];
 
