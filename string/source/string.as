@@ -76,7 +76,10 @@ package {
 			this.plugin_object.registerattribute("txtchunk", this.interface_substr);
 			this.plugin_object.registerattribute("txtfind", this.interface_indexof);
 			this.plugin_object.registerattribute("txtreplace", this.interface_replace);
-
+			this.plugin_object.registerattribute("txttrim", this.interface_trim);
+			this.plugin_object.registerattribute("txtlower", this.interface_lowercase);
+			this.plugin_object.registerattribute("txtupper", this.interface_uppercase);
+			
 			return;
 		}
 
@@ -99,6 +102,18 @@ package {
 			// find and replace a needle in a haystack
 			var pattern:RegExp = new RegExp(find, flags);
 			this.krpano.set(varname, subject.replace(pattern, replace) );
+		}
+		
+		public function interface_trim(varname:String = "", subject:String = null) : void {
+			var pattern:RegExp = /^[\s|\t|\n]+|[\s|\t|\n]+$/g;
+			this.krpano.set(varname, ((subject!=null)?subject:this.krpano.get(varname)).replace(pattern, "") );
+		}
+		
+		public function interface_lowercase(varname:String = "", subject:String = null) : void {
+			this.krpano.set(varname, ((subject!=null)?subject:this.krpano.get(varname)).toLowerCase() );
+		}
+		public function interface_uppercase(varname:String = "", subject:String = null) : void {
+			this.krpano.set(varname, ((subject!=null)?subject:this.krpano.get(varname)).toUpperCase() );
 		}
 	}
 }

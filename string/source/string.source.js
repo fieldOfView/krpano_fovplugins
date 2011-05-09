@@ -31,6 +31,9 @@ var krpanoplugin = function()
 		plugin.txtchunk = txtchunk;
 		plugin.txtfind  = txtfind;
 		plugin.txtreplace = txtreplace;
+		plugin.txttrim = txttrim;
+		plugin.txtlower = txtlowercase;
+		plugin.txtupper = txtuppercase;
 	}
 		
 		
@@ -69,4 +72,22 @@ var krpanoplugin = function()
 		krpano.set(varName, subject.replace(pattern, replace) );
 	}
 	
+	function txttrim(varName, subject)
+	{
+		// trim leading and trailing whitespace
+		var pattern = new RegExp(find, flags);
+		krpano.set(varName, ((subject!=undefined)?subject:krpano.get(varName)).replace(pattern, "") );
+	}
+	
+	function txtlowercase(varName, subject)
+	{
+		// make subject lowercase
+		krpano.set(varName, ((subject!=undefined)?subject:krpano.get(varName)).toLowerCase() );
+	}
+	
+	function txtuppercase(varName, subject)
+	{
+		// make subject lowercase
+		krpano.set(varName, ((subject!=undefined)?subject:krpano.get(varName)).toUpperCase() );
+	}
 }

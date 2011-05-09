@@ -11,6 +11,12 @@ A krpano plugin that provides a number of string manipulation methods:
 	Sets destVar to the position of 'find' in 'text', or -1 if the text is not found  
 * `txtreplace(destVar, text, find, replace, flags)`  
 	Sets destVar to a copy of 'text', replacing 'find' with 'replace'. The optional 'flags' argument can be used to set flags for the internal regular expression pattern (and defaults to ''gi' for a global, case-insensitive replace).
+* `txttrim(destVar, text)`  
+	Sets destVar to 'text' without leading and trailing whitespace. If the second argument is omitted, the method alters the current contents of destVar instead.
+* `txtupper(destVar, text)`  
+	Sets destVar to an uppercase version of 'text'. If the second argument is omitted, the method alters the current contents of destVar instead.
+* `txtlower(destVar, text)`  
+	Sets destVar to a lowercase version of 'text'. If the second argument is omitted, the method alters the current contents of destVar instead.
 	
 These methods are meant to complement the builtin txtadd method to concatenate strings. Note that all parameters except destVar are taken as literals. If you want to pass the value of a variable or property, you have to use the get() function.
 	
