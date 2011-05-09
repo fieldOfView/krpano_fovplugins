@@ -29,6 +29,8 @@ var krpanoplugin = function()
 		// register methods
 		plugin.forloop = interface_for;
 		plugin.abs = interface_abs;
+		plugin.min = interface_min;
+		plugin.max = interface_max;		
 	}
 		
 		
@@ -45,7 +47,7 @@ var krpanoplugin = function()
 	function interface_abs(varName, value)
 	{
 		// return the absolute value of the supplied value
-		krpano.set(varName, Math.abs(value));
+		krpano.set(varName, Math.abs( ((value!=undefined)?value:this.krpano.get(varName)) ));
 	}
 	
 	function interface_for(varName, startValue, endValue, stepValue, iterate)
@@ -70,5 +72,27 @@ var krpanoplugin = function()
 		krpano.set(varName, endValue);
 	}
 	
-}
+	function interface_max(varName)
+	{
+		// largest value
+		if(arguments.length > 1) {
+			value = arguments[1];
+			for(var i=2; i<arguments.length; i++) {
+				value = Math.max(value, arguments[i]);
+			}
+		}
+		this.krpano.set(varName, value );
+	}		
 	
+	function interface_min(varName) 
+	{
+		// smallest value
+		if(arguments.length > 1) {
+			value = arguments[1];
+			for(var i=2; i<arguments.length; i++) {
+				value = Math.min(value, arguments[i]);
+			}
+		}
+		this.krpano.set(varName, value );
+	}	
+}

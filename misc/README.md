@@ -9,7 +9,12 @@ in the package.
 	Iterates the actions/function specified by 'iterate' while setting the variable 'varName' from 'startValue' 
 	until it reaches 'endValue' in steps set by 'stepValue'.  
 * `abs(destVar, value)`  
-	Sets destVar to the absolute value of 'value'.  
+	Sets destVar to the absolute value of 'value'. If the second argument is omitted, the method alters the current contents of destVar instead. 
+* `max(destVar, value1, value2, ...)`  
+	Sets destVar to the highest of the passed values.
+* `min(destVar, value1, value2, ...)`  
+	Sets destVar to the lowest of the passed values.
+	
 
 How to build
 ------------

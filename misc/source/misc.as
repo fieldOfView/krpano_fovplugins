@@ -79,6 +79,8 @@ package {
 
 			this.plugin_object.registerattribute("forloop", interface_for);			
 			this.plugin_object.registerattribute("abs", interface_abs);
+			this.plugin_object.registerattribute("max", interface_max);
+			this.plugin_object.registerattribute("min", interface_min);
 			
 			return;
 		}		
@@ -106,9 +108,27 @@ package {
 			this.krpano.set(varName, endValue);
 		}
 		
-		public function interface_abs(varName:String="", value:Number=0) : void {
+		public function interface_abs(varName:String="", value:String=null) : void {
 			// absolute value
-			this.krpano.set(varName, Math.abs(value) );
+			this.krpano.set(varName, Math.abs( Number((value!=null)?value:this.krpano.get(varName)) ) );
+		}
+
+		public function interface_max(varName:String="", ... values) : void {
+			// largest value
+			var value:Number = values[0];
+			for(var i:int=1; i<values.length; i++) {
+				value = Math.max(value, Number(values[i]));
+			}
+			this.krpano.set(varName, value );
+		}		
+		
+		public function interface_min(varName:String="", ... values) : void {
+			// smallest value
+			var value:Number = values[0];
+			for(var i:int=1; i<values.length; i++) {
+				value = Math.min(value, Number(values[i]));
+			}
+			this.krpano.set(varName, value );
 		}
 	}
 }
