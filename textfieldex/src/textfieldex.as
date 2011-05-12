@@ -19,7 +19,7 @@ package
 
 
 	[SWF(width="400", height="300", backgroundColor="#000000")]
-	public class textfield extends Sprite
+	public class textfieldex extends Sprite
 	{
 		// krpano as3 interface
 		private var krpano:krpano_as3_interface = null;
@@ -35,7 +35,7 @@ package
 
 
 
-		public function textfield()
+		public function textfieldex()
 		{
 			if (stage == null)
 			{
@@ -53,7 +53,7 @@ package
 				txt.selectable = false;
 
 				txt.htmlText =	"krpano " + "1.0.8.12" + "\n\n" +
-								"<b>textfield plugin</b>"  + "\n\n" +
+								"<b>textfieldex plugin</b>"  + "\n\n" +
 								"(build " + "CUSTOM" + ")";
 
 				var f:TextFormat = new TextFormat();
@@ -89,7 +89,7 @@ package
 
 				if ( krpano.get("version") < "1.0.8" )
 				{
-					krpano.call("error(textfield plugin - wrong krpano version - min. 1.0.8 needed);");
+					krpano.call("error(textfieldex plugin - wrong krpano version - min. 1.0.8 needed);");
 					return;
 				}
 
