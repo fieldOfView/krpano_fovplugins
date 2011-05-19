@@ -23,15 +23,20 @@ package
 	{
 		// krpano as3 interface
 		private var krpano:krpano_as3_interface = null;
+		private var parsePath:Function = null;
 
 		public var pluginpath : String = null;
 		public var pluginobj  : Object = null;
 
-		public var bg  : Shape     = null;
-		public var txt : TextField = null;
-
+		public var graphicbg : Loader    = null;
+		public var bg        : Shape     = null;
+		public var txt       : TextField = null;
+		public var graphicfg : Loader    = null;
+		
 		public var txt_width  : int = 400;
 		public var txt_height : int = 300;
+		
+		private var usercontrol : String = "";
 
 
 
@@ -54,7 +59,7 @@ package
 
 				txt.htmlText =	"krpano " + "1.0.8.12" + "\n\n" +
 								"<b>textfieldex plugin</b>"  + "\n\n" +
-								"(build " + "CUSTOM" + ")";
+								"(built by Aldo Hoeben)";
 
 				var f:TextFormat = new TextFormat();
 				f.font = "_sans";
@@ -86,6 +91,7 @@ package
 			{
 				// get krpano interface
 				krpano = krpano_as3_interface.getInstance();
+				parsePath = krpano.get("parsepath");
 
 				if ( krpano.get("version") < "1.0.8" )
 				{
@@ -108,8 +114,12 @@ package
 
 		private function stopplugin(evt:Event):void
 		{
-			// remove textfield link event listener
+			// remove textfield event listeners
 			txt.removeEventListener(TextEvent.LINK, link_event);
+			txt.removeEventListener(Event.CHANGE, change_event);
+			txt.removeEventListener(MouseEvent.CLICK, click_event);
+			txt.removeEventListener(FocusEvent.FOCUS_IN, focusin_event);
+			txt.removeEventListener(FocusEvent.FOCUS_OUT, focusout_event);
 
 			// remove krpano event listeners
 			krpano.removePluginEventListener(this, krpano_as3_interface.PLUGINEVENT_REGISTER, registerEvent);
@@ -117,11 +127,17 @@ package
 			krpano.removePluginEventListener(this, krpano_as3_interface.PLUGINEVENT_UPDATE,   updateEvent);
 
 			// remove all elements
+			removeChild(graphicbg);
+			graphicbg = null;			
+			
 			removeChild(bg);
 			bg = null;
 
 			removeChild(txt);
 			txt = null;
+			
+			removeChild(graphicfg);
+			graphicfg = null;
 
 			krpano = null;
 		}
@@ -137,9 +153,11 @@ package
 
 			// register custom attributes with their default value (note - only lowercase attributes are possible!!!)
 			pluginobj.registerattribute("html",            "");
+			pluginobj.registerattribute("text",            "");
 			pluginobj.registerattribute("css",             "");
 			pluginobj.registerattribute("autosize",        "none");
 			pluginobj.registerattribute("wordwrap",        true);
+			pluginobj.registerattribute("multiline",       true);
 			pluginobj.registerattribute("background",      true);
 			pluginobj.registerattribute("backgroundcolor", 0xFFFFFF);
 			pluginobj.registerattribute("backgroundalpha", 1.0);
@@ -148,18 +166,47 @@ package
 			pluginobj.registerattribute("borderwidth",     1);
 			pluginobj.registerattribute("roundedge",       0);
 			pluginobj.registerattribute("selectable",      true);
+			pluginobj.registerattribute("editable",        false);
+			pluginobj.registerattribute("password",        false);
+			pluginobj.registerattribute("quality",         "normal");
 			pluginobj.registerattribute("glow",            0);
+			pluginobj.registerattribute("glowalpha",       1);
 			pluginobj.registerattribute("glowcolor",       0xFFFFFF);
 			pluginobj.registerattribute("blur",            0);
 			pluginobj.registerattribute("shadow",          0);
+			pluginobj.registerattribute("shadowangle",     45);
+			pluginobj.registerattribute("shadowcolor",     0x000000);
+			pluginobj.registerattribute("shadowalpha",     1);
+			pluginobj.registerattribute("shadowblur",      0);
 			pluginobj.registerattribute("textglow",        0);
+			pluginobj.registerattribute("textglowalpha",   1);
 			pluginobj.registerattribute("textglowcolor",   0xFFFFFF);
 			pluginobj.registerattribute("textblur",        0);
 			pluginobj.registerattribute("textshadow",      0);
-
+			pluginobj.registerattribute("textshadowangle", 45);
+			pluginobj.registerattribute("textshadowcolor", 0x000000);
+			pluginobj.registerattribute("textshadowalpha", 1);
+			pluginobj.registerattribute("textshadowblur",  0);
+			
+			pluginobj.registerattribute("backgroundurl",   "");
+			pluginobj.registerattribute("backgroundx",     0);
+			pluginobj.registerattribute("backgroundy",     0);
+			pluginobj.registerattribute("backgroundwidth", null);
+			pluginobj.registerattribute("backgroundheight",null);
+			pluginobj.registerattribute("backgroundslice", "");
+			
+			pluginobj.registerattribute("foregroundurl",   "");
+			pluginobj.registerattribute("foregroundx",     0);
+			pluginobj.registerattribute("foregroundy",     0);	
+			pluginobj.registerattribute("foregroundwidth", null);
+			pluginobj.registerattribute("foregroundheight",null);
+			pluginobj.registerattribute("foregroundslice", "");
+	
 			// add custom functions / link a krpano xml function to a as3 function (note - the name of the xml function must be lowercase!!!)
 			pluginobj.update = updateHTML;
 
+			// create loader for the loaded background
+			graphicbg = new Loader();
 
 			// create a background shape for the textfield
 			bg = new Shape();
@@ -175,16 +222,27 @@ package
 			txt.width         = txt_width;
 			txt.height        = txt_height;
 
-			// textfield link event listener
+			// textfield event listeners
 			txt.addEventListener(TextEvent.LINK, link_event);
-
+			txt.addEventListener(Event.CHANGE, change_event);
+			txt.addEventListener(MouseEvent.CLICK, click_event);
+			txt.addEventListener(FocusEvent.FOCUS_IN, focusin_event);
+			txt.addEventListener(FocusEvent.FOCUS_OUT, focusout_event);
+			
+			// create loader for the loaded foreground
+			graphicfg = new Loader();
+			
 			// add background and textfield
+			this.addChild(graphicbg);
 			this.addChild(bg);
 			this.addChild(txt);
+			this.addChild(graphicfg);
 
 			// update the style and content of the textfield
 			updateSTYLE();
 			updateHTML();
+			updateGraphicBG();
+			updateGraphicFG();
 		}
 
 
@@ -193,19 +251,27 @@ package
 		{
 			// the update event sends the name of the changed attribute in the "dataevent.data" variable
 
+			switch(dataevent.data) {
+				case "text":
+					txt.text = pluginobj.text;
+					break;
+			}
+			
 			// do here a quick search for the changed attribute and call the corresponding update function
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
-			const data_attributes :String = ".html.css.";
-			const style_attributes:String = ".autosize.wordwrap.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.glow.blur.shadow.textglow.textblur.textshadow.";
+			const data_attributes :String = ".text.html.css.";
+			const style_attributes:String = ".autosize.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
+			const graphicbg_attributes:String = ".backgroundurl.backgroundx.backgroundy.backgroundwidth.backgroundheight.backgroundslice";
+			const graphicfg_attributes:String = ".foregroundurl.foregroundx.foregroundy.foregroundwidth.foregroundheight.foregroundslice";
 
 			if ( data_attributes.indexOf(changedattribute) >= 0 )
-			{
 				updateHTML();
-			}
 			else if ( style_attributes.indexOf(changedattribute) >= 0 )
-			{
 				updateSTYLE();
-			}
+			else if ( graphicbg_attributes.indexOf(changedattribute) >= 0 )
+				updateGraphicBG();
+			else if ( graphicfg_attributes.indexOf(changedattribute) >= 0 )
+				updateGraphicFG();
 		}
 
 
@@ -230,19 +296,63 @@ package
 
 			// update background shape
 			updateSTYLE();
+			updateGraphicBG();
+			updateGraphicFG();
 		}
 
 
 
-		private function link_event(textevent:TextEvent):void
+		private function link_event(event:TextEvent):void
 		{
 			// pass the text after the "event:" link to krpano
 
-			krpano.call( textevent.text, null, pluginobj );
+			krpano.call( event.text, null, pluginobj );
 		}
 
+		private function change_event(event:Event):void
+		{
+			if(pluginobj.html != txt.htmlText) {
+				pluginobj.html = txt.htmlText;
+				updateHTML();
+			}
+			
+			if (pluginobj.onchange != null) 
+			{
+				krpano.call(pluginobj.onchange);
+			}
+		}		
+		
+		private function click_event(event:MouseEvent):void
+		{
+			if (pluginobj.onclick != null) 
+			{
+				krpano.call(pluginobj.onclick);
+			}
+		}
+		
+		private function focusin_event(event:FocusEvent):void
+		{
+			// disable keyboard navigation while editing text
+			usercontrol = krpano.get("control.usercontrol");
+			krpano.set("control.usercontrol", (usercontrol=="all" || usercontrol=="mouse")?"mouse":"off");
+			
+			if (pluginobj.onfocus != null) 
+			{
+				krpano.call(pluginobj.onfocus);
+			}
+		}
 
-
+		private function focusout_event(event:FocusEvent):void
+		{
+			// reenable keyboard navigation
+			krpano.set("control.usercontrol", usercontrol);
+			
+			if (pluginobj.onblur != null) 
+			{
+				krpano.call(pluginobj.onblur);
+			}
+		}
+		
 		private function updateSTYLE():void
 		{
 			// pass the krpano parameters to the as3 textfield
@@ -264,8 +374,24 @@ package
 								break;
 			}
 
-			txt.wordWrap   = pluginobj.wordwrap;
-			txt.selectable = pluginobj.selectable;
+			txt.wordWrap   = stringToBoolean(pluginobj.wordwrap);
+			txt.multiline  = stringToBoolean(pluginobj.multiline);
+			txt.selectable = stringToBoolean(pluginobj.selectable);
+			txt.type       = stringToBoolean(pluginobj.editable)?TextFieldType.INPUT:TextFieldType.DYNAMIC;
+			txt.displayAsPassword = stringToBoolean(pluginobj.password);
+			
+			if(pluginobj.quality == 'high') 
+			{
+				txt.antiAliasType = AntiAliasType.ADVANCED;
+				txt.gridFitType = GridFitType.PIXEL;
+			}
+			else
+			{
+				txt.antiAliasType = AntiAliasType.NORMAL;
+				txt.gridFitType = GridFitType.NONE;
+			}
+			
+			txt.mouseEnabled = (txt.selectable || txt.type==TextFieldType.INPUT);
 
 			// update/draw the background shape
 			bg.alpha = pluginobj.backgroundalpha;
@@ -295,7 +421,7 @@ package
 			{
 				// glow = glowing range
 				// glowcolor = color of the glowing
-				filters.push( new GlowFilter(pluginobj.glowcolor, 1.0, pluginobj.glow,pluginobj.glow) );
+				filters.push( new GlowFilter(pluginobj.glowcolor, pluginobj.glowalpha, pluginobj.glow,pluginobj.glow) );
 			}
 
 			if (pluginobj.blur > 0)
@@ -307,7 +433,7 @@ package
 			if (pluginobj.shadow > 0)
 			{
 				// shadow = shadow range
-				filters.push( new DropShadowFilter(pluginobj.shadow) );
+				filters.push( new DropShadowFilter(pluginobj.shadow, pluginobj.shadowangle, pluginobj.shadowcolor, pluginobj.shadowalpha, pluginobj.shadowblur) );
 			}
 
 			// set or remove the filters
@@ -321,7 +447,7 @@ package
 			{
 				// textglow = glowing range
 				// textglowcolor = color of the glowing
-				textfilters.push( new GlowFilter(pluginobj.textglowcolor, 1.0, pluginobj.textglow,pluginobj.textglow) );
+				textfilters.push( new GlowFilter(pluginobj.textglowcolor, pluginobj.textglowalpha, pluginobj.textglow,pluginobj.textglow) );
 			}
 
 			if (pluginobj.textblur > 0)
@@ -333,7 +459,7 @@ package
 			if (pluginobj.textshadow > 0)
 			{
 				// textshadow = shadow range
-				textfilters.push( new DropShadowFilter(pluginobj.textshadow) );
+				textfilters.push( new DropShadowFilter(pluginobj.textshadow, pluginobj.textshadowangle, pluginobj.textshadowcolor, pluginobj.textshadowalpha, pluginobj.textshadowblur) );
 			}
 
 			// set or remove the filters
@@ -375,7 +501,14 @@ package
 				}
 
 				css.parseCSS( cssdata );
-				txt.styleSheet = css;
+				if(!stringToBoolean(pluginobj.editable))
+				{
+					txt.styleSheet = css;
+				}
+				else
+				{
+					txt.defaultTextFormat = css.transform(css.getStyle("p"));
+				}
 			}
 
 			if (htmldata.indexOf("data:") == 0 )
@@ -397,13 +530,17 @@ package
 				htmldata = unescape(htmldata);
 			}
 
-			if (htmldata == null)
+			if (htmldata == null || htmldata == "")
 			{
 				htmldata = "";
 			}
-
+ 			else if(htmldata.charAt(1)!="<") 
+			{
+				htmldata = "<p>" + htmldata + "</p>";
+			}
 
 			txt.htmlText = htmldata;
+			pluginobj.text = txt.text;
 
 
 			if (txt.autoSize != "none")
@@ -442,6 +579,74 @@ package
 
 			// update the background shape
 			updateSTYLE();
+			updateGraphicBG();
+			updateGraphicFG();
+		}
+		
+		private function updateGraphicBG():void
+		{
+			if(pluginobj.backgroundurl == null)
+				return;
+				
+			var graphicURL:String = (parsePath != null)? parsePath(pluginobj.backgroundurl) : pluginobj.backgroundurl;
+
+			if(pluginobj.backgroundurl != graphicbg.contentLoaderInfo.url) {
+				graphicbg.load(new URLRequest(graphicURL));
+				graphicbg.visible = true;
+			}
+			graphicbg.x = Number(pluginobj.backgroundx);
+			graphicbg.y = Number(pluginobj.backgroundy);
+			graphicbg.scale9Grid = stringToRect(pluginobj.backgroundslice);
+			graphicbg.width = relativeSize(pluginobj.backgroundwidth, pluginobj.width);
+			graphicbg.height = relativeSize(pluginobj.backgroundheight, pluginobj.height);			
+		}	
+
+		private function updateGraphicFG():void
+		{
+			if(pluginobj.foregroundurl == null)
+				return;
+		
+			var graphicURL:String = (parsePath != null)? parsePath(pluginobj.foregroundurl) : pluginobj.foregroundurl;
+
+			if(pluginobj.foregroundurl != graphicfg.contentLoaderInfo.url) {
+				graphicfg.load(new URLRequest(graphicURL));
+				graphicfg.visible = true;
+			}
+			graphicfg.x = Number(pluginobj.foregroundx);
+			graphicfg.y = Number(pluginobj.foregroundy);
+			graphicfg.scale9Grid = stringToRect(pluginobj.foregroundslice);
+			graphicfg.width = relativeSize(pluginobj.foregroundwidth, pluginobj.width);
+			graphicfg.height = relativeSize(pluginobj.foregroundheight, pluginobj.height);			
+		}	
+		
+		private function relativeSize(value:String, source:Number):Number
+		{
+			switch(value.charAt(0)) {
+				case "+":
+				case "-":
+					return source + Number(value);
+				default:
+					return Number(value);
+			}
+		}
+
+		/*
+		 * Helper functions
+		 */		
+		private function stringToBoolean(value:String) : Boolean 
+		{ 
+			// boolean cast helper 
+			return (String("yesontrue1").indexOf( value.toLowerCase() ) >= 0); 
+		};	
+
+		private function stringToRect(value:String) : Rectangle
+		{
+			// rect cast helper
+			var arr:Array = value.split("|",4);
+			if(arr.length < 4)
+				return (new Rectangle());
+			else
+				return (new Rectangle(Number(arr[0]), Number(arr[1]), Number(arr[2]), Number(arr[3])));
 		}
 	}
 }
