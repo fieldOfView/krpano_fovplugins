@@ -1,5 +1,11 @@
 /*
-	krpano textfield plugin
+extended textfield plugin for KRPano
+by Aldo Hoeben / fieldOfView.com
+	based on textfield by Klaus / krpano.com
+
+http://fieldofview.github.com/krpano_fovplugins/misc/plugin.html
+This software can be used free of charge and the source code is available under a Creative Commons Attribution license:
+	http://creativecommons.org/licenses/by/3.0/	
 */
 
 package
@@ -17,8 +23,9 @@ package
 
 	import krpano_as3_interface;
 
-
-	[SWF(width="400", height="300", backgroundColor="#000000")]
+	// SWF Metadata
+	[SWF(width="256", height="256", backgroundColor="#000000")]
+	
 	public class textfieldex extends Sprite
 	{
 		// krpano as3 interface
@@ -38,47 +45,37 @@ package
 		
 		private var usercontrol : String = "";
 
-
-
 		public function textfieldex()
 		{
-			if (stage == null)
-			{
-				this.addEventListener(Event.ADDED_TO_STAGE, startplugin);
-				this.addEventListener(Event.UNLOAD,         stopplugin);
-			}
-			else
-			{
-				// direct startup - show version info
+			if (stage == null) {
+				this.addEventListener(Event.ADDED_TO_STAGE, this.startplugin);
+				this.addEventListener(Event.REMOVED_FROM_STAGE, this.stopplugin);
+			} else {
 				stage.scaleMode = StageScaleMode.NO_SCALE;
-				stage.align     = StageAlign.TOP_LEFT;
-
+				stage.align = StageAlign.TOP_LEFT;
+				
+				var format:TextFormat = new TextFormat();
+				format.font = "_sans";
+				format.size = 14;
+				format.align = "center";
 				var txt:TextField = new TextField();
-				txt.textColor = 0xFFFFFF;
+				txt.textColor = 0xffffff;
 				txt.selectable = false;
-
-				txt.htmlText =	"krpano " + "1.0.8.12" + "\n\n" +
-								"<b>textfieldex plugin</b>"  + "\n\n" +
-								"(built by Aldo Hoeben)";
-
-				var f:TextFormat = new TextFormat();
-				f.font = "_sans";
-				f.size = 14;
-				txt.autoSize = f.align = "center";
-				txt.setTextFormat(f);
-
+				txt.htmlText = "<b>textfieldex plugin</b> for KRPano" + "\n\n" + "Aldo Hoeben / fieldOfView.com";
+				txt.autoSize = "center";
+				txt.setTextFormat(format);
 				addChild(txt);
-
-				var resizefu:Function = function(event:Event):void
-				{
-					txt.x = (stage.stageWidth  - txt.width)/2;
-					txt.y = (stage.stageHeight - txt.height)/2;
+				
+				var resize:Function = function (event:Event) : void {
+					txt.x = (stage.stageWidth - txt.width) / 2;
+					txt.y = (stage.stageHeight - txt.height) / 2;
+					return;
 				}
-
-				stage.addEventListener(Event.RESIZE, resizefu);
-
-				resizefu(null);
+			
+				stage.addEventListener(Event.RESIZE, resize);
+				resize(null);
 			}
+			return;
 		}
 
 
