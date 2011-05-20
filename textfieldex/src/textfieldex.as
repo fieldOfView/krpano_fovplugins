@@ -43,8 +43,10 @@ package
 		public var txt_width  : int = 256;
 		public var txt_height : int = 256;
 		
-		private var usercontrol : String = "";
-
+		private var usercontrol   : String = "";
+		private var backgroundURL : String = "";
+		private var foregroundURL : String = "";
+		
 		public function textfieldex()
 		{
 			if (stage == null) {
@@ -192,20 +194,19 @@ package
 			pluginobj.registerattribute("backgroundy",     0);
 			pluginobj.registerattribute("backgroundwidth", null);
 			pluginobj.registerattribute("backgroundheight",null);
-			pluginobj.registerattribute("backgroundslice", "");
 			
 			pluginobj.registerattribute("foregroundurl",   "");
 			pluginobj.registerattribute("foregroundx",     0);
 			pluginobj.registerattribute("foregroundy",     0);	
 			pluginobj.registerattribute("foregroundwidth", null);
 			pluginobj.registerattribute("foregroundheight",null);
-			pluginobj.registerattribute("foregroundslice", "");
 	
 			// add custom functions / link a krpano xml function to a as3 function (note - the name of the xml function must be lowercase!!!)
 			pluginobj.update = updateHTML;
 
 			// create loader for the loaded background
 			graphicbg = new Loader();
+			graphicbg.contentLoaderInfo.addEventListener(Event.COMPLETE, updateGraphicBG);
 
 			// create a background shape for the textfield
 			bg = new Shape();
@@ -230,6 +231,7 @@ package
 			
 			// create loader for the loaded foreground
 			graphicfg = new Loader();
+			graphicfg.contentLoaderInfo.addEventListener(Event.COMPLETE, updateGraphicFG);
 			
 			// add background and textfield
 			this.addChild(graphicbg);
@@ -260,8 +262,8 @@ package
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
 			const data_attributes :String = ".text.html.css.";
 			const style_attributes:String = ".autosize.autowidth.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
-			const graphicbg_attributes:String = ".backgroundurl.backgroundx.backgroundy.backgroundwidth.backgroundheight.backgroundslice";
-			const graphicfg_attributes:String = ".foregroundurl.foregroundx.foregroundy.foregroundwidth.foregroundheight.foregroundslice";
+			const graphicbg_attributes:String = ".backgroundurl.backgroundx.backgroundy.backgroundwidth.backgroundheight";
+			const graphicfg_attributes:String = ".foregroundurl.foregroundx.foregroundy.foregroundwidth.foregroundheight";
 
 			if ( data_attributes.indexOf(changedattribute) >= 0 )
 				updateHTML();
@@ -612,44 +614,49 @@ package
 			updateGraphicFG();
 		}
 		
-		private function updateGraphicBG():void
+		private function updateGraphicBG(event:Event=null):void
 		{
 			if(pluginobj.backgroundurl == null)
 				return;
 				
 			var graphicURL:String = (parsePath != null)? parsePath(pluginobj.backgroundurl) : pluginobj.backgroundurl;
-
-			if(pluginobj.backgroundurl != graphicbg.contentLoaderInfo.url) {
+			if(graphicURL != backgroundURL) {
+				backgroundURL = graphicURL;
 				graphicbg.load(new URLRequest(graphicURL));
+			} else if(graphicbg.content) {
 				graphicbg.visible = true;
+				graphicbg.x = Number(pluginobj.backgroundx);
+				graphicbg.y = Number(pluginobj.backgroundy);
+
+				graphicbg.width = relativeSize(pluginobj.backgroundwidth, txt_width);
+				graphicbg.height = relativeSize(pluginobj.backgroundheight, txt_height);				
 			}
-			graphicbg.x = Number(pluginobj.backgroundx);
-			graphicbg.y = Number(pluginobj.backgroundy);
-			graphicbg.scale9Grid = stringToRect(pluginobj.backgroundslice);
-			graphicbg.width = relativeSize(pluginobj.backgroundwidth, pluginobj.width);
-			graphicbg.height = relativeSize(pluginobj.backgroundheight, pluginobj.height);			
 		}	
 
-		private function updateGraphicFG():void
+		private function updateGraphicFG(event:Event=null):void
 		{
 			if(pluginobj.foregroundurl == null)
 				return;
 		
 			var graphicURL:String = (parsePath != null)? parsePath(pluginobj.foregroundurl) : pluginobj.foregroundurl;
-
-			if(pluginobj.foregroundurl != graphicfg.contentLoaderInfo.url) {
+			if(graphicURL != foregroundURL) {
+				foregroundURL = graphicURL;
 				graphicfg.load(new URLRequest(graphicURL));
+			} else if(graphicfg.content) {
 				graphicfg.visible = true;
+				graphicfg.x = Number(pluginobj.foregroundx);
+				graphicfg.y = Number(pluginobj.foregroundy);
+
+				graphicfg.width = relativeSize(pluginobj.foregroundwidth, txt_width);
+				graphicfg.height = relativeSize(pluginobj.foregroundheight, txt_height);				
 			}
-			graphicfg.x = Number(pluginobj.foregroundx);
-			graphicfg.y = Number(pluginobj.foregroundy);
-			graphicfg.scale9Grid = stringToRect(pluginobj.foregroundslice);
-			graphicfg.width = relativeSize(pluginobj.foregroundwidth, pluginobj.width);
-			graphicfg.height = relativeSize(pluginobj.foregroundheight, pluginobj.height);			
 		}	
 		
 		private function relativeSize(value:String, source:Number):Number
 		{
+			if(Number(value) == 0)
+				return source;
+				
 			switch(value.charAt(0)) {
 				case "+":
 				case "-":
@@ -671,11 +678,14 @@ package
 		private function stringToRect(value:String) : Rectangle
 		{
 			// rect cast helper
-			var arr:Array = value.split("|",4);
-			if(arr.length < 4)
-				return (new Rectangle());
-			else
-				return (new Rectangle(Number(arr[0]), Number(arr[1]), Number(arr[2]), Number(arr[3])));
+			if(value)
+			{
+				var arr:Array = value.split("|",4);
+
+				if(arr.length == 4)
+					return (new Rectangle(Number(arr[0]), Number(arr[1]), Number(arr[2]), Number(arr[3])));
+			}
+			return (new Rectangle());
 		}
 	}
 }
