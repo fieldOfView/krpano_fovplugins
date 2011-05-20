@@ -40,8 +40,8 @@ package
 		public var txt       : TextField = null;
 		public var graphicfg : Loader    = null;
 		
-		public var txt_width  : int = 400;
-		public var txt_height : int = 300;
+		public var txt_width  : int = 256;
+		public var txt_height : int = 256;
 		
 		private var usercontrol : String = "";
 
@@ -154,6 +154,7 @@ package
 			pluginobj.registerattribute("text",            "");
 			pluginobj.registerattribute("css",             "");
 			pluginobj.registerattribute("autosize",        "none");
+			pluginobj.registerattribute("autowidth",       false);
 			pluginobj.registerattribute("wordwrap",        true);
 			pluginobj.registerattribute("multiline",       true);
 			pluginobj.registerattribute("background",      true);
@@ -258,7 +259,7 @@ package
 			// do here a quick search for the changed attribute and call the corresponding update function
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
 			const data_attributes :String = ".text.html.css.";
-			const style_attributes:String = ".autosize.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
+			const style_attributes:String = ".autosize.autowidth.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
 			const graphicbg_attributes:String = ".backgroundurl.backgroundx.backgroundy.backgroundwidth.backgroundheight.backgroundslice";
 			const graphicfg_attributes:String = ".foregroundurl.foregroundx.foregroundy.foregroundwidth.foregroundheight.foregroundslice";
 
@@ -416,6 +417,11 @@ package
 			
 			txt.mouseEnabled = (txt.selectable || txt.type==TextFieldType.INPUT);
 
+			if(stringToBoolean(pluginobj.autowidth) && txt.autoSize != "none")
+			{
+				txt_width = txt.textWidth+4;
+			}			
+			
 			// update/draw the background shape
 			bg.alpha = pluginobj.backgroundalpha;
 
