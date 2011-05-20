@@ -117,6 +117,7 @@ package
 			txt.removeEventListener(MouseEvent.CLICK, click_event);
 			txt.removeEventListener(FocusEvent.FOCUS_IN, focusin_event);
 			txt.removeEventListener(FocusEvent.FOCUS_OUT, focusout_event);
+			txt.removeEventListener(KeyboardEvent.KEY_DOWN, keydown_event);
 
 			// remove krpano event listeners
 			krpano.removePluginEventListener(this, krpano_as3_interface.PLUGINEVENT_REGISTER, registerEvent);
@@ -332,6 +333,8 @@ package
 			// disable keyboard navigation while editing text
 			usercontrol = krpano.get("control.usercontrol");
 			krpano.set("control.usercontrol", (usercontrol=="all" || usercontrol=="mouse")?"mouse":"off");
+
+			txt.addEventListener(KeyboardEvent.KEY_DOWN, keydown_event);
 			
 			if (pluginobj.onfocus != null) 
 			{
@@ -343,10 +346,33 @@ package
 		{
 			// reenable keyboard navigation
 			krpano.set("control.usercontrol", usercontrol);
+
+			txt.removeEventListener(KeyboardEvent.KEY_DOWN, keydown_event);
 			
 			if (pluginobj.onblur != null) 
 			{
 				krpano.call(pluginobj.onblur);
+			}
+		}
+		
+		private function keydown_event(event:KeyboardEvent):void
+		{
+			switch(event.keyCode)
+			{
+				case 79:
+					// 'o'; inhibit showing/hiding the output window
+					event.stopPropagation();
+					break;
+				case 13:
+					// enter; if single line, call submit action
+					if(!txt.multiline)
+					{
+						if (pluginobj.onsubmit != null) 
+						{
+							krpano.call(pluginobj.onsubmit);
+						}
+					}
+					break;
 			}
 		}
 		
