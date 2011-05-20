@@ -398,7 +398,7 @@ package
 			}
 
 			txt.wordWrap   = stringToBoolean(pluginobj.wordwrap);
-			txt.multiline  = stringToBoolean(pluginobj.multiline);
+			txt.multiline  = (pluginobj.multiline != null)? stringToBoolean(pluginobj.multiline) : true;
 			txt.selectable = stringToBoolean(pluginobj.selectable);
 			txt.type       = stringToBoolean(pluginobj.editable)?TextFieldType.INPUT:TextFieldType.DYNAMIC;
 			txt.displayAsPassword = stringToBoolean(pluginobj.password);
