@@ -35,17 +35,13 @@ package
 		public var pluginpath : String = null;
 		public var pluginobj  : Object = null;
 
-		public var graphicbg : Loader    = null;
 		public var bg        : Shape     = null;
 		public var txt       : TextField = null;
-		public var graphicfg : Loader    = null;
 		
 		public var txt_width  : int = 256;
 		public var txt_height : int = 256;
 		
 		private var usercontrol   : String = "";
-		private var backgroundURL : String = "";
-		private var foregroundURL : String = "";
 		
 		public function textfieldex()
 		{
@@ -127,17 +123,11 @@ package
 			krpano.removePluginEventListener(this, krpano_as3_interface.PLUGINEVENT_UPDATE,   updateEvent);
 
 			// remove all elements
-			removeChild(graphicbg);
-			graphicbg = null;
-			
 			removeChild(bg);
 			bg = null;
 
 			removeChild(txt);
 			txt = null;
-			
-			removeChild(graphicfg);
-			graphicfg = null;
 
 			krpano = null;
 		}
@@ -188,25 +178,9 @@ package
 			pluginobj.registerattribute("textshadowcolor", 0x000000);
 			pluginobj.registerattribute("textshadowalpha", 1);
 			pluginobj.registerattribute("textshadowblur",  0);
-			
-			pluginobj.registerattribute("backgroundurl",   "");
-			pluginobj.registerattribute("backgroundx",     0);
-			pluginobj.registerattribute("backgroundy",     0);
-			pluginobj.registerattribute("backgroundwidth", null);
-			pluginobj.registerattribute("backgroundheight",null);
-			
-			pluginobj.registerattribute("foregroundurl",   "");
-			pluginobj.registerattribute("foregroundx",     0);
-			pluginobj.registerattribute("foregroundy",     0);	
-			pluginobj.registerattribute("foregroundwidth", null);
-			pluginobj.registerattribute("foregroundheight",null);
 
 			// add custom functions / link a krpano xml function to a as3 function (note - the name of the xml function must be lowercase!!!)
 			pluginobj.update = updateHTML;
-
-			// create loader for the loaded background
-			graphicbg = new Loader();
-			graphicbg.contentLoaderInfo.addEventListener(Event.COMPLETE, updateGraphicBG);
 
 			// create a background shape for the textfield
 			bg = new Shape();
@@ -229,21 +203,13 @@ package
 			txt.addEventListener(FocusEvent.FOCUS_IN, focusin_event);
 			txt.addEventListener(FocusEvent.FOCUS_OUT, focusout_event);
 			
-			// create loader for the loaded foreground
-			graphicfg = new Loader();
-			graphicfg.contentLoaderInfo.addEventListener(Event.COMPLETE, updateGraphicFG);
-			
 			// add background and textfield
-			this.addChild(graphicbg);
 			this.addChild(bg);
 			this.addChild(txt);
-			this.addChild(graphicfg);
 
 			// update the style and content of the textfield
 			updateSTYLE();
 			updateHTML();
-			updateGraphicBG();
-			updateGraphicFG();
 		}
 
 
@@ -262,17 +228,15 @@ package
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
 			const data_attributes :String = ".text.html.css.";
 			const style_attributes:String = ".autosize.autowidth.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
-			const graphicbg_attributes:String = ".backgroundurl.backgroundx.backgroundy.backgroundwidth.backgroundheight";
-			const graphicfg_attributes:String = ".foregroundurl.foregroundx.foregroundy.foregroundwidth.foregroundheight";
 
 			if ( data_attributes.indexOf(changedattribute) >= 0 )
+			{
 				updateHTML();
+			}
 			else if ( style_attributes.indexOf(changedattribute) >= 0 )
+			{
 				updateSTYLE();
-			else if ( graphicbg_attributes.indexOf(changedattribute) >= 0 )
-				updateGraphicBG();
-			else if ( graphicfg_attributes.indexOf(changedattribute) >= 0 )
-				updateGraphicFG();
+			}
 		}
 
 
@@ -297,8 +261,6 @@ package
 
 			// update background shape
 			updateSTYLE();
-			updateGraphicBG();
-			updateGraphicFG();
 		}
 
 
@@ -322,7 +284,7 @@ package
 				krpano.call(pluginobj.onchange);
 			}
 		}		
-		
+
 		private function click_event(event:MouseEvent):void
 		{
 			if (pluginobj.onclick != null) 
@@ -330,7 +292,7 @@ package
 				krpano.call(pluginobj.onclick);
 			}
 		}
-		
+
 		private function focusin_event(event:FocusEvent):void
 		{
 			// disable keyboard navigation while editing text
@@ -357,7 +319,7 @@ package
 				krpano.call(pluginobj.onblur);
 			}
 		}
-		
+
 		private function keydown_event(event:KeyboardEvent):void
 		{
 			switch(event.keyCode)
@@ -378,7 +340,7 @@ package
 					break;
 			}
 		}
-		
+
 		private function updateSTYLE():void
 		{
 			// pass the krpano parameters to the as3 textfield
@@ -405,7 +367,7 @@ package
 			txt.selectable = stringToBoolean(pluginobj.selectable);
 			txt.type       = stringToBoolean(pluginobj.editable)?TextFieldType.INPUT:TextFieldType.DYNAMIC;
 			txt.displayAsPassword = stringToBoolean(pluginobj.password);
-			
+
 			if(pluginobj.quality == 'high') 
 			{
 				txt.antiAliasType = AntiAliasType.ADVANCED;
@@ -416,14 +378,14 @@ package
 				txt.antiAliasType = AntiAliasType.NORMAL;
 				txt.gridFitType = GridFitType.NONE;
 			}
-			
+
 			txt.mouseEnabled = (txt.selectable || txt.type==TextFieldType.INPUT);
 
 			if(stringToBoolean(pluginobj.autowidth) && txt.autoSize != "none")
 			{
 				txt_width = txt.textWidth+4;
 			}			
-			
+
 			// update/draw the background shape
 			bg.alpha = pluginobj.backgroundalpha;
 
@@ -610,61 +572,8 @@ package
 
 			// update the background shape
 			updateSTYLE();
-			updateGraphicBG();
-			updateGraphicFG();
 		}
-		
-		private function updateGraphicBG(event:Event=null):void
-		{
-			if(pluginobj.backgroundurl == null)
-				return;
-				
-			var graphicURL:String = (parsePath != null)? parsePath(pluginobj.backgroundurl) : pluginobj.backgroundurl;
-			if(graphicURL != backgroundURL) {
-				backgroundURL = graphicURL;
-				graphicbg.load(new URLRequest(graphicURL));
-			} else if(graphicbg.content) {
-				graphicbg.visible = true;
-				graphicbg.x = Number(pluginobj.backgroundx);
-				graphicbg.y = Number(pluginobj.backgroundy);
 
-				graphicbg.width = relativeSize(pluginobj.backgroundwidth, txt_width);
-				graphicbg.height = relativeSize(pluginobj.backgroundheight, txt_height);				
-			}
-		}	
-
-		private function updateGraphicFG(event:Event=null):void
-		{
-			if(pluginobj.foregroundurl == null)
-				return;
-		
-			var graphicURL:String = (parsePath != null)? parsePath(pluginobj.foregroundurl) : pluginobj.foregroundurl;
-			if(graphicURL != foregroundURL) {
-				foregroundURL = graphicURL;
-				graphicfg.load(new URLRequest(graphicURL));
-			} else if(graphicfg.content) {
-				graphicfg.visible = true;
-				graphicfg.x = Number(pluginobj.foregroundx);
-				graphicfg.y = Number(pluginobj.foregroundy);
-
-				graphicfg.width = relativeSize(pluginobj.foregroundwidth, txt_width);
-				graphicfg.height = relativeSize(pluginobj.foregroundheight, txt_height);				
-			}
-		}	
-		
-		private function relativeSize(value:String, source:Number):Number
-		{
-			if(Number(value) == 0)
-				return source;
-				
-			switch(value.charAt(0)) {
-				case "+":
-				case "-":
-					return source + Number(value);
-				default:
-					return Number(value);
-			}
-		}
 
 		/*
 		 * Helper functions
@@ -674,18 +583,5 @@ package
 			// boolean cast helper 
 			return (String("yesontrue1").indexOf( value.toLowerCase() ) >= 0); 
 		};	
-
-		private function stringToRect(value:String) : Rectangle
-		{
-			// rect cast helper
-			if(value)
-			{
-				var arr:Array = value.split("|",4);
-
-				if(arr.length == 4)
-					return (new Rectangle(Number(arr[0]), Number(arr[1]), Number(arr[2]), Number(arr[3])));
-			}
-			return (new Rectangle());
-		}
 	}
 }
