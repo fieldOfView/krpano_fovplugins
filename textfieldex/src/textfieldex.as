@@ -50,8 +50,8 @@ package
 		public function textfieldex()
 		{
 			if (stage == null) {
-				this.addEventListener(Event.ADDED_TO_STAGE, this.startplugin);
-				this.addEventListener(Event.REMOVED_FROM_STAGE, this.stopplugin);
+				this.addEventListener(Event.ADDED_TO_STAGE, startplugin);
+				this.addEventListener(Event.UNLOAD, stopplugin);
 			} else {
 				stage.scaleMode = StageScaleMode.NO_SCALE;
 				stage.align = StageAlign.TOP_LEFT;
@@ -128,7 +128,7 @@ package
 
 			// remove all elements
 			removeChild(graphicbg);
-			graphicbg = null;			
+			graphicbg = null;
 			
 			removeChild(bg);
 			bg = null;
@@ -200,7 +200,7 @@ package
 			pluginobj.registerattribute("foregroundy",     0);	
 			pluginobj.registerattribute("foregroundwidth", null);
 			pluginobj.registerattribute("foregroundheight",null);
-	
+
 			// add custom functions / link a krpano xml function to a as3 function (note - the name of the xml function must be lowercase!!!)
 			pluginobj.update = updateHTML;
 
@@ -303,11 +303,11 @@ package
 
 
 
-		private function link_event(event:TextEvent):void
+		private function link_event(textevent:TextEvent):void
 		{
 			// pass the text after the "event:" link to krpano
 
-			krpano.call( event.text, null, pluginobj );
+			krpano.call( textevent.text, null, pluginobj );
 		}
 
 		private function change_event(event:Event):void
