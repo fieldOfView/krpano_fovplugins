@@ -13,7 +13,7 @@ var krpanoplugin = function()
 		krpano = null, plugin = null,
 	
 		onOrientationChange = "",
-		orientation = (window.orientation === undefined)?0:window.orientation,
+		orientation = (top.orientation === undefined)?0:top.orientation,
 		landscape = (Math.abs(orientation) == 90),
 		portrait = !landscape;
 
@@ -31,7 +31,7 @@ var krpanoplugin = function()
 			return;
 		}
 
-		window.addEventListener("orientationchange", handleOrientationChange, true);
+		top.addEventListener("orientationchange", handleOrientationChange, true);
 		
 		// register attributes
 		plugin.registerattribute("orientation",        orientation, function(arg){}, function(){ return orientation; });
@@ -43,7 +43,7 @@ var krpanoplugin = function()
 		
 	local.unloadplugin = function()
 	{
-		window.removeEventListener("orientationchange", handleOrientationChange);
+		top.removeEventListener("orientationchange", handleOrientationChange);
 
 		plugin = null;
 		krpano = null;
@@ -58,7 +58,7 @@ var krpanoplugin = function()
 	
 	function handleOrientationChange(event)
 	{
-		orientation = window.orientation;
+		orientation = top.orientation;
 		landscape = (Math.abs(orientation) == 90),
 		portrait = !landscape;
 		
