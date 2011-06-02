@@ -1,0 +1,14 @@
+<krpano version="1.0.8">
+	<events name="console" />
+	
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+		
+	<plugin name="test" url="../../textfieldex.swf" 
+		align="center" autosize="left" autowidth="true"
+		html="Hello world"
+		css="p{color:#000000;font-family:Arial;font-size:14px}"
+		background="true" backgroundcolor="0xddddff" borderwidth="0"
+		shadow="5" shadowalpha="0.25" shadowblur="5"
+		multiline="false" editable="true"
+		/>
+</krpano>

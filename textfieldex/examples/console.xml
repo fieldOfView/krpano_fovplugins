@@ -1,0 +1,25 @@
+<krpano version="1.0.8">
+	<events name="console" onxmlcomplete="showlog()" />
+	<action name="execute">
+		call(plugin[commandline].text);
+		set(plugin[commandline].html,);
+	</action>
+	
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+		
+	<plugin name="commandline" url="../../textfieldex.swf" 
+		align="bottom" width="100%" height="20" x="0" y="150" 
+		html="set(view.vlookat,-45)"
+		css="p{color:#ffffff;font-family:Courier;font-size:10px}"
+		background="true" backgroundcolor="0x000000" backgroundalpha="0.6" borderwidth="0"
+		multiline="false" editable="true"
+		onsubmit="execute();"
+		/>
+	<plugin name="call" url="../../textfieldex.swf" children="false"
+		align="bottomright" width="40" height="20" y="150" 
+		html="CALL"
+		css="p{color:#ffffff;font-family:Courier;font-size:10px}"
+		background="false" borderwidth="0" zorder="1"
+		onclick="execute();"
+		/>
+</krpano>
