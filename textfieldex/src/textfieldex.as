@@ -147,6 +147,9 @@ package
 			pluginobj.registerattribute("css",             "");
 			pluginobj.registerattribute("autosize",        "none");
 			pluginobj.registerattribute("autowidth",       false);
+			pluginobj.registerattribute("autowidthmargin", 4);
+			pluginobj.registerattribute("minwidth",        0);
+			pluginobj.registerattribute("minheight",       0);
 			pluginobj.registerattribute("wordwrap",        true);
 			pluginobj.registerattribute("multiline",       true);
 			pluginobj.registerattribute("background",      true);
@@ -154,7 +157,9 @@ package
 			pluginobj.registerattribute("backgroundalpha", 1.0);
 			pluginobj.registerattribute("border",          false);			// new in 1.0.8.12
 			pluginobj.registerattribute("bordercolor",     0x000000);
+			pluginobj.registerattribute("borderalpha",     1.0);
 			pluginobj.registerattribute("borderwidth",     1);
+			pluginobj.registerattribute("borderjoints",    "round");
 			pluginobj.registerattribute("roundedge",       0);
 			pluginobj.registerattribute("selectable",      true);
 			pluginobj.registerattribute("editable",        false);
@@ -227,7 +232,7 @@ package
 			// do here a quick search for the changed attribute and call the corresponding update function
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
 			const data_attributes :String = ".text.html.css.";
-			const style_attributes:String = ".autosize.autowidth.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderwidth.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
+			const style_attributes:String = ".autosize.autowidth.autowidthmargin.minwidth.minheight.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderalpha.borderwidth.borderjoints.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
 
 			if ( data_attributes.indexOf(changedattribute) >= 0 )
 			{
@@ -383,7 +388,9 @@ package
 
 			if(stringToBoolean(pluginobj.autowidth) && txt.autoSize != "none")
 			{
-				txt_width = txt.textWidth+4;
+				txt_width = txt.textWidth+parseInt(pluginobj.autowidthmargin);
+				if(Number(pluginobj.minwidth) > 0)
+					txt_width = Math.max(Number(pluginobj.minwidth), txt_width);
 			}			
 
 			// update/draw the background shape
@@ -395,7 +402,7 @@ package
 			if (pluginobj.background || pluginobj.border)
 			{
 				if (pluginobj.borderwidth > 0)
-					bg.graphics.lineStyle(pluginobj.borderwidth, pluginobj.bordercolor);
+					bg.graphics.lineStyle(pluginobj.borderwidth, pluginobj.bordercolor, pluginobj.borderalpha, (pluginobj.quality == 'high'), 'normal', null, pluginobj.borderjoints );
 
 				if (pluginobj.background)
 					bg.graphics.beginFill(pluginobj.backgroundcolor);
@@ -542,6 +549,9 @@ package
 
 				// save size
 				txt_height = txt.height;
+				
+				if(Number(pluginobj.minheight) > 0)
+					txt_height = Math.max(Number(pluginobj.minheight), txt_height);
 
 				//krpano.set(pluginpath + ".height", txt_height);
 				pluginobj.height = txt_height;
@@ -563,6 +573,9 @@ package
 		private function updateSIZE(te:TimerEvent=null):void
 		{
 			txt_height = txt.height;
+			
+			if(Number(pluginobj.minheight) > 0)
+					txt_height = Math.max(Number(pluginobj.minheight), txt_height);
 
 			//krpano.set(pluginpath + ".height",     txt_height);
 			//krpano.set(pluginpath + ".textheight", txt.textHeight);
