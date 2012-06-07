@@ -160,7 +160,7 @@ package {
 
 				if(previousDistance > 0 && newDistance > 0) { 
 					var fov:Number = krpano.get("view.fov");
-					krpano.set("view.fov", fov * newDistance / previousDistance);
+					krpano.set("view.fov", fov * previousDistance / newDistance);
 				}
 			} else {
 				// always keep track of all touchpoints, in case the zoompoints couple changes
