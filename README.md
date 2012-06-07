@@ -21,6 +21,21 @@ A series of krpano plugins by [Aldo Hoeben / fieldOfView](http://fieldofview.com
 	A plugin that uses the gyroscope in devices such as the iPhone 4 
 	and iPad2 to control the view.
 	
+* **imageadjust**
+	A plugin that lets you adjust the brightness/contrast, hue/saturation
+	and blur of the view.
+
+* **misc**
+	A plugin that adds miscelaneous functionalities to krpano which do 
+	not fit in with any of the other plugins in the package.
+	
+* **multitouch**
+	A plugin that enables multitouch zoom on Windows 7 and Android
+	multitouch devices.
+	
+* **orientation**
+	A plugin that detects changes in the device orientation.
+	
 * **string**  
 	A plugin that adds string manipulation functions to krpano. 
 
