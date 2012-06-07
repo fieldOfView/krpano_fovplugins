@@ -2,6 +2,7 @@ krpano multitouch zoom plugin
 =============================
 
 A krpano plugin that enables multitouch zoom on Windows 7 and Android multitouch devices.
+On Android devices, the plugin only works inside AIR applications; the Android browser is not supported at this time.
 The plugin has no attributes 
   
 
