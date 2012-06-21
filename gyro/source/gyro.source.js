@@ -14,16 +14,18 @@ var krpanoplugin = function()
 {
 	var local = this,
 		krpano = null, plugin = null,
-		have_top_access = false,	// KR - is access to the top object allowed?
+		isTopAccessible = false,	
 
 		isDeviceAvailable,
 		isEnabled = false,
 		vElasticity = 0,
+		isVRelative = false,
 		isCamRoll = false,
 		friction = 0.5,
 
 		isTouching = false,
-		samples = 0,	// KR - skip first gyro event samples
+		validSample = false,
+		firstSample = null;
 		hOffset = 0, vOffset = 0,
 		hLookAt = 0, vLookAt = 0, camRoll = 0,
 		vElasticSpeed = 0,
@@ -44,13 +46,12 @@ var krpanoplugin = function()
 			return;
 		}
 		
-		have_top_access = krpano._have_top_access;	// KR - is access to the top object allowed?
-		if (have_top_access === undefined)
+		isTopAccessible = krpano._have_top_access;
+		if (isTopAccessible === undefined)
 		{
-			have_top_access = false;
-			
 			// old krpano version - test manually for top access
-			try{ if (top && top.document) have_top_access = true; }catch(e){}
+			isTopAccessible = false;
+			try{ if (top && top.document) isTopAccessible = true; }catch(e){}
 		}
 
 		// Initiate device check
@@ -60,12 +61,13 @@ var krpanoplugin = function()
 		// Register attributes
 		plugin.registerattribute("available",false, function(arg){}, function(){ return isDeviceAvailable; });
 		plugin.registerattribute("enabled",  true,  function(arg){ stringToBoolean(arg) ? enable() : disable() }, function(){ return isEnabled; });
-		plugin.registerattribute("velastic", 0,		function(arg){ vElasticity = Math.max(Math.min(Number(arg), 1), 0); krpano.trace(0,(1-Math.pow(vElasticity,2))); }, function() { return vElasticity; });
+		plugin.registerattribute("velastic", 0,		function(arg){ vElasticity = Math.max(Math.min(Number(arg), 1), 0); }, function() { return vElasticity; });
+		plugin.registerattribute("vrelative", false,function(arg){ isVRelative = stringToBoolean(arg); }, function() { return isVRelative; });
 		plugin.registerattribute("camroll",  false, function(arg){ isCamRoll = stringToBoolean(arg); }, function() { return isCamRoll; });
 		plugin.registerattribute("friction",   0.5,   function(arg){ friction = Math.max(Math.min(Number(arg), 1), 0); }, function() { return friction; });
 		
 		// Register events
-		plugin.registerattribute("onavailability", null);	// KR - new onavailability event
+		plugin.registerattribute("onavailable", null);
 
 		// Register methods
 		plugin.enable  = enable;
@@ -89,6 +91,9 @@ var krpanoplugin = function()
 
 	function enable()
 	{
+		validSample = false;
+		firstSample = null;
+	
 		if (isDeviceAvailable === undefined)
 		{
 			isEnabled = true;
@@ -103,11 +108,11 @@ var krpanoplugin = function()
 			krpano.control.layer.addEventListener("touchcancel", handleTouchEnd,   true);
 			isEnabled = true;
 
-			hOffset = -(have_top_access ? top.orientation : window.orientation);	// KR - is access to the top object allowed?
+			hOffset = -(isTopAccessible ? top.orientation : window.orientation);
 			vOffset = 0;
 			hLookAt = 0;
 			vLookAt = 0;
-			camRoll = krpano.view.camroll;	// KR
+			camRoll = krpano.view.camroll;
 		}
 		else
 		{
@@ -119,13 +124,13 @@ var krpanoplugin = function()
 	{
 		if (isDeviceAvailable && isEnabled)
 		{
-			window.removeEventListener("deviceorientation", handleDeviceOrientation, true);		// KR - bugfix: useCapture=true was missing
+			window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
 			krpano.control.layer.removeEventListener("touchstart",  handleTouchStart);
 			krpano.control.layer.removeEventListener("touchend",    handleTouchEnd);
 			krpano.control.layer.removeEventListener("touchcancel", handleTouchEnd);
 		}
 		
-		if (isCamRoll)	// KR - return camroll back to 0 on disabling
+		if (isCamRoll) 
 		{
 			krpano.call("tween(view.camroll,0)");
 		}
@@ -158,8 +163,9 @@ var krpanoplugin = function()
 			enable();
 		}
 		
-		if (plugin.onavailability != null)	// KR - new onavailability event
-			krpano.call(plugin.onavailability, plugin);
+		// Call onavailable actions in krpano xml
+		if (plugin.onavailable != null)
+			krpano.call(plugin.onavailable, plugin);
 	}
 
 	function handleTouchStart(event)
@@ -174,15 +180,10 @@ var krpanoplugin = function()
 
 	function handleDeviceOrientation(event)
 	{
-		if(++samples < 10)	// KR - skip first gyro event samples
-			return;
-			
-		var device_orientation = have_top_access ? top.orientation : window.orientation; // KR - is access to the top object allowed?
-			
-		if ( !isTouching && isEnabled )
-		{
+		if ( !isTouching && isEnabled )	{
 			// Process event.alpha, event.beta and event.gamma
-			var orientation = rotateEuler({		// KR - removed 'new Object'
+			var deviceOrientation = isTopAccessible ? top.orientation : window.orientation,
+				orientation = rotateEuler({
 						yaw: event["alpha"] * degRad,
 						pitch: event["beta"] * degRad,
 						roll: event["gamma"] * degRad
@@ -197,8 +198,26 @@ var krpanoplugin = function()
 				hSpeed = hLookAtNow - hLookAt,
 				vSpeed = vLookAtNow - vLookAt;
 
-			if(isCamRoll) {
-				camRoll = wrapAngle( 180 + Number(device_orientation) - orientation.roll  / degRad );	// KR - top.orientation
+			// Ignore all sample untill we get a sample that is different from the first sample
+			if(!validSample) 
+			{
+				if( firstSample == null ) 
+					firstSample = orientation;
+				else 
+				{
+					if( orientation.yaw!=firstSample.yaw || orientation.pitch!=firstSample.pitch || orientation.roll!=firstSample.roll ) 
+					{
+						firstSample = null;
+						validSample = true;
+						if( isVRelative ) 
+							vOffset = -pitch;
+					}					
+				}
+				return;
+			}
+				
+			if( isCamRoll ) {
+				camRoll = wrapAngle( 180 + Number(deviceOrientation) - orientation.roll  / degRad );
 			}
 
 			// Fix gimbal lock
@@ -206,7 +225,7 @@ var krpanoplugin = function()
 			{
 				altYaw = event.alpha;
 
-				switch(device_orientation)	// KR - top.orientation
+				switch(deviceOrientation)
 				{
 					case 0:
 						if ( pitch>0 )
@@ -301,12 +320,11 @@ var krpanoplugin = function()
 			sb = Math.sin(euler.roll);
 
 		// Note: Includes 90 degree rotation around z axis
-		var matrix = new Array	// KR - bugfix: 'var' was missing
-			(
+		var matrix = [
 				sh*sb - ch*sa*cb,   -ch*ca,    ch*sa*sb + sh*cb,
 				ca*cb,              -sa,      -ca*sb,
 				sh*sa*cb + ch*sb,    sh*ca,   -sh*sa*sb + ch*cb
-			);
+			];
 
 		/* [m00 m01 m02] 0 1 2
 		 * [m10 m11 m12] 3 4 5
@@ -333,7 +351,7 @@ var krpanoplugin = function()
 			attitude = Math.asin(matrix[3]);
 		}
 
-		return { yaw:heading, pitch:attitude, roll:bank };	// KR - removed 'new Object'
+		return { yaw:heading, pitch:attitude, roll:bank };
 	}
 
 	////////////////////////////////////////////////////////////
