@@ -64,9 +64,11 @@ krpanoJS.</p>
         <a href="http://krpano.com/docu/xml/#plugin.url">url</a>="gyro.js" 
         <a href="http://krpano.com/docu/xml/#plugin.keep">keep</a>="true"
         <a href="#enabled" class="pluginattrib">enabled</a>="true"
+        <a href="#onavailable" class="pluginattrib">onavailable</a>="trace('Gyroscope is available')"
         <a href="#camroll" class="pluginattrib">camroll</a>="true"
         <a href="#friction" class="pluginattrib">friction</a>="0.5"
         <a href="#velastic" class="pluginattrib">velastic</a>="0.2"
+        <a href="#vrelative" class="pluginattrib">vrelative</a>="false"
         /&gt;</pre>
         </div>
         <div class="paragraph">
@@ -75,11 +77,14 @@ krpanoJS.</p>
             <dt><a name="available" href="#available" class="selflink">available</a></dt>
             <dd>This read-only attribute is only set to true if the browser/device is generating deviceorientation events. It can be used to determine if a ui for the gyroscope is applicable.<br>
               values: true/false, read-only</dd>
+            <dt><a name="onavailable" href="#onavailable" class="selflink">onavailable</a></dt>
+            <dd>Actions / functions that will be called when the plugin detects the gyroscope device.<br>
+              values: function or action-name</dd>
             <dt><a name="enabled" href="#enabled" class="selflink">enabled</a></dt>
-            <dd>Enabled and/or disables the gyroscope for navigation.<br>
+            <dd>Enables and/or disables the gyroscope for navigation.<br>
               values: true/false, default: true</dd>
             <dt><a name="camroll" href="#camroll" class="selflink">camroll</a></dt>
-            <dd> Determines whether or not the camera rotates around the roll axis.<br>
+            <dd>Determines whether or not the camera rotates around the roll axis.<br>
               values: true/false, default: false</dd>
             <dt><a name="friction" href="#friction" class="selflink">friction</a></dt>
             <dd> Dampens the gyroscope values, making the result less &quot;twitchy&quot;. 0 means no dampening, 1 is infinite dampening (ie: no gyroscope movement)<br>
@@ -87,6 +92,9 @@ krpanoJS.</p>
             <dt><a name="velastic" href="#velastic" class="selflink">velastic</a></dt>
             <dd>If set to a value greater than 0, the vlookat parameter returns to the device pitch after manually altering the view. The higher the value, the faster the view returns to the device pitch.<br>
               values: 0-1, default: 0</dd>
+            <dt><a name="vrelative" href="#vrelative" class="selflink">vrelative</a></dt>
+            <dd>When set to true, the vertical movement is set relative to the initial view when the gyro plugin is enabled. In combination with velastic="0", this prevents the view from "nosediving" if the device is flat on a table.<br>
+              values: true/false, default: false</dd>
           </dl>
         </div>
         <div class="paragraph">
