@@ -14,6 +14,7 @@ var krpanoplugin = function()
 {
 	var local = this,
 		krpano = null, plugin = null,
+		have_top_access = false,	// KR - is access to the top object allowed?
 
 		isDeviceAvailable,
 		isEnabled = false,
@@ -22,6 +23,7 @@ var krpanoplugin = function()
 		friction = 0.5,
 
 		isTouching = false,
+		samples = 0,	// KR - skip first gyro event samples
 		hOffset = 0, vOffset = 0,
 		hLookAt = 0, vLookAt = 0, camRoll = 0,
 		vElasticSpeed = 0,
@@ -41,6 +43,15 @@ var krpanoplugin = function()
 			krpano.trace(3,"gyro plugin - too old krpano version (min. 1.0.8.14)");
 			return;
 		}
+		
+		have_top_access = krpano._have_top_access;	// KR - is access to the top object allowed?
+		if (have_top_access === undefined)
+		{
+			have_top_access = false;
+			
+			// old krpano version - test manually for top access
+			try{ if (top && top.document) have_top_access = true; }catch(e){}
+		}
 
 		// Initiate device check
 		if(!!window.DeviceOrientationEvent)
@@ -52,6 +63,9 @@ var krpanoplugin = function()
 		plugin.registerattribute("velastic", 0,		function(arg){ vElasticity = Math.max(Math.min(Number(arg), 1), 0); krpano.trace(0,(1-Math.pow(vElasticity,2))); }, function() { return vElasticity; });
 		plugin.registerattribute("camroll",  false, function(arg){ isCamRoll = stringToBoolean(arg); }, function() { return isCamRoll; });
 		plugin.registerattribute("friction",   0.5,   function(arg){ friction = Math.max(Math.min(Number(arg), 1), 0); }, function() { return friction; });
+		
+		// Register events
+		plugin.registerattribute("onavailability", null);	// KR - new onavailability event
 
 		// Register methods
 		plugin.enable  = enable;
@@ -89,10 +103,11 @@ var krpanoplugin = function()
 			krpano.control.layer.addEventListener("touchcancel", handleTouchEnd,   true);
 			isEnabled = true;
 
-			hOffset = -top.orientation;
+			hOffset = -(have_top_access ? top.orientation : window.orientation);	// KR - is access to the top object allowed?
 			vOffset = 0;
 			hLookAt = 0;
 			vLookAt = 0;
+			camRoll = krpano.view.camroll;	// KR
 		}
 		else
 		{
@@ -104,10 +119,15 @@ var krpanoplugin = function()
 	{
 		if (isDeviceAvailable && isEnabled)
 		{
-			window.removeEventListener("deviceorientation", handleDeviceOrientation);
+			window.removeEventListener("deviceorientation", handleDeviceOrientation, true);		// KR - bugfix: useCapture=true was missing
 			krpano.control.layer.removeEventListener("touchstart",  handleTouchStart);
 			krpano.control.layer.removeEventListener("touchend",    handleTouchEnd);
 			krpano.control.layer.removeEventListener("touchcancel", handleTouchEnd);
+		}
+		
+		if (isCamRoll)	// KR - return camroll back to 0 on disabling
+		{
+			krpano.call("tween(view.camroll,0)");
 		}
 
 		isEnabled = false;
@@ -137,6 +157,9 @@ var krpanoplugin = function()
 			isEnabled = false;
 			enable();
 		}
+		
+		if (plugin.onavailability != null)	// KR - new onavailability event
+			krpano.call(plugin.onavailability, plugin);
 	}
 
 	function handleTouchStart(event)
@@ -151,14 +174,19 @@ var krpanoplugin = function()
 
 	function handleDeviceOrientation(event)
 	{
+		if(++samples < 10)	// KR - skip first gyro event samples
+			return;
+			
+		var device_orientation = have_top_access ? top.orientation : window.orientation; // KR - is access to the top object allowed?
+			
 		if ( !isTouching && isEnabled )
 		{
 			// Process event.alpha, event.beta and event.gamma
-			var orientation = rotateEuler( new Object( {
+			var orientation = rotateEuler({		// KR - removed 'new Object'
 						yaw: event["alpha"] * degRad,
 						pitch: event["beta"] * degRad,
 						roll: event["gamma"] * degRad
-				} ) ),
+				}),
 				yaw = wrapAngle( orientation.yaw / degRad ),
 				pitch = orientation.pitch / degRad,
 				altYaw = yaw,
@@ -170,7 +198,7 @@ var krpanoplugin = function()
 				vSpeed = vLookAtNow - vLookAt;
 
 			if(isCamRoll) {
-				camRoll = wrapAngle( 180 + Number(top.orientation) - orientation.roll  / degRad );
+				camRoll = wrapAngle( 180 + Number(device_orientation) - orientation.roll  / degRad );	// KR - top.orientation
 			}
 
 			// Fix gimbal lock
@@ -178,7 +206,7 @@ var krpanoplugin = function()
 			{
 				altYaw = event.alpha;
 
-				switch(top.orientation)
+				switch(device_orientation)	// KR - top.orientation
 				{
 					case 0:
 						if ( pitch>0 )
@@ -273,7 +301,7 @@ var krpanoplugin = function()
 			sb = Math.sin(euler.roll);
 
 		// Note: Includes 90 degree rotation around z axis
-		matrix = new Array
+		var matrix = new Array	// KR - bugfix: 'var' was missing
 			(
 				sh*sb - ch*sa*cb,   -ch*ca,    ch*sa*sb + sh*cb,
 				ca*cb,              -sa,      -ca*sb,
@@ -305,7 +333,7 @@ var krpanoplugin = function()
 			attitude = Math.asin(matrix[3]);
 		}
 
-		return new Object( { yaw:heading, pitch:attitude, roll:bank } )
+		return { yaw:heading, pitch:attitude, roll:bank };	// KR - removed 'new Object'
 	}
 
 	////////////////////////////////////////////////////////////
