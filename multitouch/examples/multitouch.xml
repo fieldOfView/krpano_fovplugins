@@ -1,0 +1,5 @@
+<krpano version="1.0.8">
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+	
+	<plugin name="multitouch" url="../../multitouch.swf" devices="flash" />	
+</krpano>

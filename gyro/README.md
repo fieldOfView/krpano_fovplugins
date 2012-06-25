@@ -13,7 +13,7 @@ How to use
 ----------
 
 The gyro.js file is included as a plugin in the krpano xml file:
-<plugin url="gyro.js" enabled="true" friction="0.5" camroll="true" velastic="0.25" />
+<plugin url="gyro.js" enabled="true" friction="0.5" camroll="true" velastic="0.25" vrelative="false" />
 
 The source of the plugin is compressed using YUI compressor. You may use either the compressed or the source version.
 
