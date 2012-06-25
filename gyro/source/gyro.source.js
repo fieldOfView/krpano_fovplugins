@@ -25,7 +25,7 @@ var krpanoplugin = function()
 
 		isTouching = false,
 		validSample = false,
-		firstSample = null;
+		firstSample = null,
 		hOffset = 0, vOffset = 0,
 		hLookAt = 0, vLookAt = 0, camRoll = 0,
 		vElasticSpeed = 0,
@@ -317,14 +317,13 @@ var krpanoplugin = function()
 			ca = Math.cos(euler.pitch),
 			sa = Math.sin(euler.pitch),
 			cb = Math.cos(euler.roll),
-			sb = Math.sin(euler.roll);
+			sb = Math.sin(euler.roll),
 
-		// Note: Includes 90 degree rotation around z axis
-		var matrix = [
+			matrix = [
 				sh*sb - ch*sa*cb,   -ch*ca,    ch*sa*sb + sh*cb,
 				ca*cb,              -sa,      -ca*sb,
 				sh*sa*cb + ch*sb,    sh*ca,   -sh*sa*sb + ch*cb
-			];
+			]; // Note: Includes 90 degree rotation around z axis
 
 		/* [m00 m01 m02] 0 1 2
 		 * [m10 m11 m12] 3 4 5
