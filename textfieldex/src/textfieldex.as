@@ -148,6 +148,7 @@ package
 			pluginobj.registerattribute("scale",           1);
 			pluginobj.registerattribute("scaletext",       false);
 			pluginobj.registerattribute("autosize",        "none");
+			pluginobj.registerattribute("autosizemargin",  4);
 			pluginobj.registerattribute("autowidth",       false);
 			pluginobj.registerattribute("autowidthmargin", 4);
 			pluginobj.registerattribute("minwidth",        0);
@@ -236,7 +237,7 @@ package
 			// do here a quick search for the changed attribute and call the corresponding update function
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
 			const data_attributes :String = ".text.html.css.";
-			const style_attributes:String = ".scale.scaletext.autosize.autowidth.autowidthmargin.minwidth.minheight.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderalpha.borderwidth.borderjoints.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
+			const style_attributes:String = ".scale.scaletext.autosize.autosizemargin.autowidth.autowidthmargin.minwidth.minheight.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderalpha.borderwidth.borderjoints.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
 
 			if ( data_attributes.indexOf(changedattribute) >= 0 )
 			{
@@ -257,24 +258,26 @@ package
 			var width :int = parseInt(resizesize);
 			var height:int = parseInt(resizesize.slice(resizesize.indexOf("x")+1));
 
+			var margin:int = parseInt(pluginobj.autosizemargin);
+
 			// set the size of the textfield
 			txt.width  = width;
 			txt.height = height;
-
+			
 			// save size
 			txt_width  = width;
-			if (stringToBoolean(pluginobj.autosize)) 
-				txt_height = txt.textHeight;
+			if ( txt.autoSize != "none" ) 
+				txt_height = txt.textHeight + margin;
 			else
-				txt_height = height;
+				txt_height = height + margin;
 				
 			if (stringToBoolean(pluginobj.scaletext))
 			{
 				txt.width  = width/pluginobj.scale;
 				txt.height = height/pluginobj.scale;
 
-				if(stringToBoolean(pluginobj.autosize))
-					txt_height = txt.textHeight * pluginobj.scale;
+				if ( txt.autoSize != "none" )
+					txt_height = (txt.textHeight + margin) * pluginobj.scale;
 			}
 
 			// update background shape
