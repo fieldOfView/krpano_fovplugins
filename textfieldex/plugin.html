@@ -1,0 +1,196 @@
+<!-- krpano plugin page template -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="format-detection" content="telephone=no" />
+<title>krpano.com - Plugins - fieldOfView Plugins - textfieldex</title>
+<link rel="stylesheet" type="text/css" media="screen" href="http://krpano.com/design/design.css"/>
+<link rel="stylesheet" type="text/css" media="print" href="http://krpano.com/design/print.css"/>
+<link rel="SHORTCUT ICON" href="http://krpano.com/design/shortcut.ico"/>
+</head>
+<body>
+<div id="krpano_root">
+  <div id="krpano_headerwrapper">
+    <div id="krpano_header">
+      <div id="krpano_langsel">&nbsp;</div>
+      <div id="krpano_mainmenu">&nbsp;</div>
+    </div>
+  </div>
+  <div>
+    <div id="krpano_imagebar"></div>
+    <div id="krpano_logo"></div>
+  </div>
+  <div id="krpano_imagebar_space"></div>
+  <div id="krpano_contentwrapper">
+    <div id="krpano_content">
+      <div id="krpano_contentnav">
+        <h2><a href="/krpano_fovplugins" class="selflink">fovplugins</a></h2>
+        <p>This is the staging area for the fieldOfView plugins for krpano. A copy of these pages is included on krpano.com. The pages in this staging area may be newer than the respective pages on krpano.com.</p>
+        <ul>
+            <li><a href="http://krpano.com/plugins/userplugins/fieldofview">offical krpano.com pages</a></li>
+            <li><a href="https://github.com/fieldofview/krpano_fovplugins">source repository</a></li>
+        </ul>
+      </div>
+      <a name="top"></a>
+      <div id="krpano_contenttext"> 
+        <!-- USER CONTENT STARTS HERE -->
+        
+        <h1>Extended Textfield Plugin <span class="pluginfilename">textfieldex</span> 
+          <span class="flashhtml5">for Flash</span>
+          <div class="pluginautor">by Aldo Hoeben - <a href="http://fieldofview.com">fieldofview.com</a></div>
+        </h1>
+        <div class="paragraph">
+          <h2><a name="description" href="#description" class="selflink">Description</a></h2>
+          <p>A drop-in replacement for the textfield.swf krpano plugin with extended capabilities. It is based on the textfield.swf sources distributed with the krpano viewer package, and inherits all of its functionality. See the <a href="http://krpano.com/plugins/textfield/">original documentation</a> for general use information. This page only documents the extended functionality.</p>
+          <p>You may rename the plugin to textfield.swf and use it instead of 
+            the stock version, but note that this functionality is not available 
+          for the builtin textfield of the HTML5 viewer.</p>
+        </div>
+        <div class="paragraph">
+          <h2><a name="download" href="#download" class="selflink">Download</a></h2>
+          <div class="dlitem"> <a href="http://fieldofview.github.com/krpano_fovplugins/textfieldex.swf">textfieldex.swf</a>&nbsp; <small>(plugin only)</small></div>
+          <p>The textfieldex <a href="https://github.com/fieldOfView/krpano_fovplugins/tree/master/textfieldex">sources and examples</a> are available as part of the fovplugins package</p>
+          <div class="dlitem"> <a href="https://github.com/fieldOfView/krpano_fovplugins/zipball/master">fovplugins.zip</a>&nbsp; <small>(plugin, source code &amp; examples)</small><br/>
+          </div>
+        </div>
+        <div class="paragraph">
+          <h2><a name="forum" href="#forum" class="selflink">krpano Forum Discussion Thread</a></h2>
+          <a href="http://krpano.com/forum/wbb/index.php?page=Thread&threadID=7495">Extended Textfield Plugin Thread</a> </div>
+        <div class="paragraph">
+          <h2><a name="syntax" href="#syntax" class="selflink">Syntax / XML Usage Example</a></h2>
+          <pre class="xmlpre">&lt;<a href="http://krpano.com/docu/xml/#plugin">plugin</a> <a href="http://krpano.com/docu/xml/#plugin.name">name</a>="textfieldex" 
+        <a href="http://krpano.com/docu/xml/#plugin.url">url</a>="textfieldex.swf" <a href="http://krpano.com/docu/xml/#plugin.alturl"></a>
+        <a href="http://krpano.com/docu/xml/#plugin.keep">keep</a>="true"
+        /&gt;</pre>
+        </div>
+        <div class="paragraph">
+          <h2><a name="attributes" href="#attributes" class="selflink">Added Plugin Attributes</a></h2>
+          <dl>
+            <dt><a name="text" href="#text" class="selflink">text</a></dt>
+            <dd> Set and/or read pure text, without HTML tags.<br>
+              values: text content without HTML tags</dd>
+            <dt><a name="scaletext" href="#scaletext" class="selflink">scaletext</a></dt>
+            <dd> Scale text/fontsize with plugin/hotspot.<br>
+            values: true/false, default: false </dd>
+            <dt><a name="autosizemargin" href="#autosizemargin" class="selflink">autosizemargin</a></dt>
+            <dd> Adds a margin to the bottom of the background when autosize="true".<br>
+              values: &gt;0, default: 4</dd>
+            <dt><a name="autowidth" href="#autowidth" class="selflink">autowidth</a></dt>
+            <dd> Automatically adjust the width of the background when multiline="false".<br>
+            values: true/false, default: false </dd>
+            <dt><a name="autowidthmargin" href="#autowidthmargin" class="selflink">autowidthmargin</a></dt>
+            <dd> Adds a margin to the right of the background when autowidth=&quot;true&quot;.<br>
+              values:&gt;0, default: 4</dd>
+            <dt><a name="multiline" href="#multiline" class="selflink">multiline</a></dt>
+            <dd> Determine if all text should be rendered on a single line.<br>
+            values: true/false, default: true </dd>
+            <dt><a name="editable" href="#editable" class="selflink">editable</a></dt>
+            <dd> Makes the textfield editable.<br>
+            values: true/false, default: false </dd>
+            <dt><a name="password" href="#password" class="selflink">password</a></dt>
+            <dd> Hides the typed characters for editable text.<br>
+            values: true/false, default: false</dd>
+            <dt><a name="onsubmit" href="#onsubmit" class="selflink">onsubmit</a></dt>
+            <dd> Actions / function that will be called when the user presses enter in an editable, non-multiline textfield.<br>
+              values: function or action-name </dd>
+            <dt><a name="quality" href="#quality" class="selflink">quality</a></dt>
+            <dd> Enhanced render quality for text and border.<br>
+              values: normal/high, default: normal</dd>
+            <dt><a name="borderalpha" href="#borderalpha" class="selflink">borderalpha</a></dt>
+            <dd> Set the alpha of the border.<br>
+              values: 0-1, default: 1 </dd>
+            <dt><a name="borderjoints" href="#borderjoints" class="selflink">borderjoints</a></dt>
+            <dd> Set the shape of the border joints.<br>
+              values: miter/round/bevel, default: round </dd>              
+            <dt><a name="glowalpha" href="#glowalpha" class="selflink">glowalpha</a></dt>
+            <dd> Set the alpha of the rendered glow around the plugin/hotspot.<br>
+              values: 0-1, default: 1 </dd>
+            <dt><a name="shadowangle" href="#shadowangle" class="selflink">shadowangle</a></dt>
+            <dd> Set the angle of the rendered shadow around the plugin/hotspot.<br>
+              values: 0-360, default: 45 </dd>
+            <dt><a name="shadowcolor" href="#shadowcolor" class="selflink">shadowcolor</a></dt>
+            <dd> Set the color of the rendered shadow around the plugin/hotspot.<br>
+              values: hex color, default: 0x000000</dd>
+            <dt><a name="shadowalpha" href="#shadowalpha" class="selflink">shadowalpha</a></dt>
+            <dd> Set the alpha of the rendered shadow around the plugin/hotspot.<br>
+            values: 0-1, default: 1 </dd>
+            <dt><a name="shadowblur" href="#shadowblur" class="selflink">shadowblur</a></dt>
+            <dd> Set the blur amount of the rendered shadow around the plugin/hotspot.<br>
+              values: &gt;0, default: 0 </dd>
+            <dt><a name="textglowalpha" href="#textglowalpha" class="selflink">textglowalpha</a></dt>
+            <dd> Set the alpha of the rendered glow around the text.<br>
+              values: 0-1, default: 1</dd>
+            <dt><a name="textshadowangle" href="#textshadowangle" class="selflink">textshadowangle</a></dt>
+            <dd> Set the angle of the rendered shadow around the text.<br>
+              values: 0-360, default: 45</dd>
+            <dt><a name="textshadowcolor" href="#textshadowcolor" class="selflink">textshadowcolor</a></dt>
+            <dd> Set the color of the rendered shadow around the text.<br>
+              values: hex color, default: 0x000000</dd>
+            <dt><a name="textshadowalpha" href="#textshadowalpha" class="selflink">textshadowalpha</a></dt>
+            <dd> Set the alpha of the rendered shadow around the text.<br>
+              values: 0-1, default: 1</dd>              
+            <dt><a name="textshadowblur" href="#textshadowblur" class="selflink">textshadowblur</a></dt>
+            <dd> Set the blur amount of the rendered shadow around the text.<br>
+              values: &gt;0, default: 0</dd></dl></div>
+        <div class="paragraph">
+          <h2><a name="example" href="#example" class="selflink">Example</a></h2>
+          <script>
+            function showexample() 
+            {
+                var iframe = '<iframe id="ccexample" name="ccframe" src="examples/scale.html" width="100%"  height="300" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+                document.getElementById("example").innerHTML = iframe;
+            }
+        </script>
+          <div id="example" onclick="showexample();" style="width:100%;height:300px;color:white;background-color:black;border:1px solid gray;cursor:pointer;">
+            <table width="100%" height="100%" style="color:white;">
+              <tr valign="middle">
+                <td><center>
+                    <b>CLICK TO VIEW EXAMPLE</b>
+                  </center></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="paragraph">
+          <h2><a name="license" href="#license" class="selflink">License</a></h2>
+          <p><a href="http://creativecommons.org/licenses/by/3.0/"><img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="CC-BY-3.0" width="88px" height="31px" hspace="8" border="0" align="right"></a> The plugin can be used free of charge, in commercial or non-commercial applications. The source code is available under a <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution</a> license.</p>
+          <p>In a nutshell, this means you are free to use the software and its source code in your projects. If you use the source code in another software project, you are required to add attribution to the author(s). You are encouraged to share the your source code under a similar fashion, but it is not a requirement.</p>
+          <p><form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="float:right;margin:0 8px;">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="KZEYXA3FSY6PQ">
+            <input type="image" src="http://files.fieldofview.com/paypal-donate-button.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_US/i/scr/pixel.gif" width="1" height="1">
+          </form> If you use the plugins regularly, you may consider making a donation so I can afford to continue making these plugins and making them available.</p>
+        </div>
+        <!-- USER CONTENT ENDS HERE --> 
+      </div>
+    </div>
+  </div>
+  <div id="krpano_footerwrapper">
+    <div id="krpano_footer">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td align="right">Copyright &copy; 2011 krpano.com</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Piwik -->
+<script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://logs.fieldofview.com/" : "http://logs.fieldofview.com/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 4);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="http://logs.fieldofview.com/piwik.php?idsite=4" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+</body>
+</html>

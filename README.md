@@ -38,6 +38,10 @@ A series of krpano plugins by [Aldo Hoeben / fieldOfView](http://fieldofview.com
 	
 * **string**  
 	A plugin that adds string manipulation functions to krpano. 
+	
+* **textfieldex**
+	A drop-in replacement for the textfield.swf krpano plugin with 
+	extended capabilities.
 
 * **vectormath**  
 	A plugin that adds vector-math calculations to krpano.
