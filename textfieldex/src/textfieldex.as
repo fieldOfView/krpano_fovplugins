@@ -145,6 +145,8 @@ package
 			pluginobj.registerattribute("html",            "");
 			pluginobj.registerattribute("text",            "");
 			pluginobj.registerattribute("css",             "");
+			pluginobj.registerattribute("scale",           1);
+			pluginobj.registerattribute("scaletext",       false);
 			pluginobj.registerattribute("autosize",        "none");
 			pluginobj.registerattribute("autowidth",       false);
 			pluginobj.registerattribute("autowidthmargin", 4);
@@ -200,7 +202,9 @@ package
 			txt.condenseWhite = true;
 			txt.width         = txt_width;
 			txt.height        = txt_height;
-
+			txt.scaleX        = 1;
+			txt.scaleY        = 1;
+			
 			// textfield event listeners
 			txt.addEventListener(TextEvent.LINK, link_event);
 			txt.addEventListener(Event.CHANGE, change_event);
@@ -232,7 +236,7 @@ package
 			// do here a quick search for the changed attribute and call the corresponding update function
 			var changedattribute:String = "." + String( dataevent.data ) + ".";
 			const data_attributes :String = ".text.html.css.";
-			const style_attributes:String = ".autosize.autowidth.autowidthmargin.minwidth.minheight.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderalpha.borderwidth.borderjoints.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
+			const style_attributes:String = ".scale.scaletext.autosize.autowidth.autowidthmargin.minwidth.minheight.wordwrap.multiline.background.backgroundcolor.backgroundalpha.border.bordercolor.borderalpha.borderwidth.borderjoints.roundedge.selectable.editable.password.quality.glow.glowcolor.glowalpha.blur.shadow.shadowcolor.shadowalpha.shadowblur.shadowangle.textglow.textglowcolor.textglowalpha.textblur.textshadow.textshadowcolor.textshadowalpha.textshadowblur.textshadowangle.";
 
 			if ( data_attributes.indexOf(changedattribute) >= 0 )
 			{
@@ -250,11 +254,8 @@ package
 		{
 			var resizesize:String = dataevent.data;		// size has the format WIDTHxHEIGHT
 
-			var width :int;
-			var height:int;
-
-			width  = parseInt(resizesize);
-			height = parseInt(resizesize.slice(resizesize.indexOf("x")+1));
+			var width :int = parseInt(resizesize);
+			var height:int = parseInt(resizesize.slice(resizesize.indexOf("x")+1));
 
 			// set the size of the textfield
 			txt.width  = width;
@@ -262,7 +263,19 @@ package
 
 			// save size
 			txt_width  = width;
-			txt_height = height;
+			if (stringToBoolean(pluginobj.autosize)) 
+				txt_height = txt.textHeight;
+			else
+				txt_height = height;
+				
+			if (stringToBoolean(pluginobj.scaletext))
+			{
+				txt.width  = width/pluginobj.scale;
+				txt.height = height/pluginobj.scale;
+
+				if(stringToBoolean(pluginobj.autosize))
+					txt_height = txt.textHeight * pluginobj.scale;
+			}
 
 			// update background shape
 			updateSTYLE();
@@ -464,6 +477,12 @@ package
 
 			// set or remove the filters
 			txt.filters = textfilters.length > 0 ? textfilters : null
+			
+			if (stringToBoolean(pluginobj.scaletext) > 0)
+			{
+				txt.scaleX = pluginobj.scale;
+				txt.scaleY = pluginobj.scale;
+			}
 		}
 
 

@@ -1,0 +1,20 @@
+<krpano version="1.0.8" onstart="showlog()">
+	
+	<preview type="grid(cube,16,16,512,0xCCCCCC,0xFFFFFF,0x999999);" details="16" />
+		
+	<style name="tests"	url="../../textfieldex.swf" 
+		align="center" multiline="true" 
+		html="The quick brown fox jumps over the lazy dog"
+		css="p{color:#ff0000;font-size:20px}"
+		background="true" backgroundcolor="0x000000" backgroundalpha="0.6" borderwidth="0"
+		/>
+		
+	<plugin name="test1" style="tests" x="-200" y="-100" />
+	<plugin name="test2" style="tests" x="100" y="-100" scale=".5" />
+	<plugin name="test3" style="tests" x="300" y="-100" scale=".5" scaletext="true" />
+
+	<plugin name="test4" style="tests" x="-200" y="200" autosize="true" />
+	<plugin name="test5" style="tests" x="100" y="200" autosize="true" scale=".5" />
+	<plugin name="test6" style="tests" x="300" y="200" autosize="true" scale=".5" scaletext="true" />
+
+</krpano>
