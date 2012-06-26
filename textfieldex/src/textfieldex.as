@@ -42,6 +42,7 @@ package
 		public var txt_height : int = 256;
 		
 		private var usercontrol   : String = "";
+		private var keyboardupdate: Boolean = false;
 		
 		public function textfieldex()
 		{
@@ -188,7 +189,7 @@ package
 			pluginobj.registerattribute("textshadowblur",  0);
 
 			// add custom functions / link a krpano xml function to a as3 function (note - the name of the xml function must be lowercase!!!)
-			pluginobj.update = updateHTML;
+			//pluginobj.update = updateHTML;
 
 			// create a background shape for the textfield
 			bg = new Shape();
@@ -360,6 +361,7 @@ package
 					}
 					break;
 			}
+			keyboardupdate = true;
 		}
 
 		private function updateSTYLE():void
@@ -541,14 +543,22 @@ package
 			else
 			{
 				// directly use the given html
-				// (<> chars are not possible in a xml attribure, therefore provide the usage of [] instead)
+				
+				if(keyboardupdate) 
+				{
+					// do not convert from [] to <> if this update was caused by keyboard input
+					keyboardupdate = false;
+				} else
+				{
+					// (<> chars are not possible in a xml attribure, therefore provide the usage of [] instead)
 
-				// replace '[' -> '<'
-				htmldata = str_replace(htmldata,"[","<");
+					// replace '[' -> '<'
+					htmldata = str_replace(htmldata,"[","<");
 
-				// replace ']' -> '>'
-				htmldata = str_replace(htmldata,"]",">");
-
+					// replace ']' -> '>'
+					htmldata = str_replace(htmldata,"]",">");
+				}
+				
 				htmldata = unescape(htmldata);
 			}
 
