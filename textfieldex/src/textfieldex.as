@@ -189,7 +189,7 @@ package
 			pluginobj.registerattribute("textshadowblur",  0);
 
 			// add custom functions / link a krpano xml function to a as3 function (note - the name of the xml function must be lowercase!!!)
-			//pluginobj.update = updateHTML;
+			pluginobj.update = updateHTML;
 
 			// create a background shape for the textfield
 			bg = new Shape();
