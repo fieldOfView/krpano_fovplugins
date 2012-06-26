@@ -10,49 +10,49 @@ krpano.com/plugins/textfield
 
 The textfieldex version of the plugin adds the following properties:
 
-* `text`		
+* `text`  
 	Set/read pure text, without HTML tags
-* `scaletext`
+* `scaletext` (true/false)  
 	Scale text/fontsize with plugin/hotspot
-* `autosizemargin`
+* `autosizemargin` (>=0)  
 	Adds a margin to the bottom of the background when autosize="true"
-* `autowidth`
+* `autowidth` (true/false)  
 	Automatically adjust the width of the background (when multiline="false")
-* `autowidthmargin`
+* `autowidthmargin` (>=0)  
 	Adds a margin to the right of the background when autowidth="true"
-* `multiline`
+* `multiline` (true/false)  
 	Determine if all text should be rendered on a single line	
-* `editable`
+* `editable` (true/false)  
 	Makes the textfield editable
-* `password`
+* `password` (true/false)  
 	Hides the typed characters
-* `onsubmit`
+* `onsubmit`  
 	Actions / function that will be called when the user presses enter in an editable, non-multiline textfield.
-* `quality`
+* `quality` (normal/high)  
 	Enhanced render quality for fonts
-* `borderalpha`
+* `borderalpha` (0-1)  
 	Set the alpha of the border
-* `borderjoints`
+* `borderjoints` (miter/round/bevel)  
 	Set the shape of the joints of the border	
-* `glowalpha`
+* `glowalpha` (0-1)  
 	Set the alpha of the rendered glow around the plugin/hotspot
-* `shadowangle`
+* `shadowangle` (0-360)  
 	Set the angle of the rendered shadow around the plugin/hotspot
-* `shadowcolor`
+* `shadowcolor`  
 	Set the color of the rendered shadow around the plugin/hotspot
-* `shadowalpha`
+* `shadowalpha` (0-1)  
 	Set the alpha of the rendered shadow around the plugin/hotspot
-* `shadowblur`
+* `shadowblur` (>=0)  
 	Set the blur amount of the rendered shadow around the plugin/hotspot
-* `textglowalpha
+* `textglowalpha`  (0-1)  
 	Set the alpha of the rendered glow around the text
-* `textshadowangle`
+* `textshadowangle` (0-360)  
 	Set the angle of the rendered shadow around the text
-* `textshadowcolor`
+* `textshadowcolor`  
 	Set the color of the rendered shadow around the text
-* `textshadowalpha`
+* `textshadowalpha` (0-1)  
 	Set the alpha of the rendered shadow around the text
-* `textshadowblur`
+* `textshadowblur` (>=0)  
 	Set the blur amount of the rendered shadow around the text
 	
 You may rename the plugin to textfield.swf and use it instead of 
