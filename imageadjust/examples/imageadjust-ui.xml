@@ -155,7 +155,6 @@
 		if( %1 == blurradius , mul(val,20); roundval(val,1); );
 		set(plugin[imageadjust].%1, get(val));
 		showvaltext(%1);
-		showcode();
 	</action>
 	
 	
