@@ -296,8 +296,10 @@ package
 
 		private function change_event(event:Event):void
 		{
-			if(pluginobj.html != txt.htmlText) {
+			if(pluginobj.html != txt.htmlText || pluginobj.text != txt.text) {
 				pluginobj.html = txt.htmlText;
+				pluginobj.text = txt.text;
+
 				updateHTML();
 			}
 			
